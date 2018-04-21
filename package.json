@@ -1,0 +1,28 @@
+{
+  "name": "pandiff",
+  "version": "0.1.0",
+  "description": "Prose diffs for any document format supported by Pandoc",
+  "main": "index.js",
+  "bin": "cli.js",
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "author": "David A Roberts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidar/pandiff.git"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1",
+    "standard": "^11.0.1"
+  },
+  "dependencies": {
+    "diff": "^3.5.0",
+    "jsdom": "^11.8.0",
+    "node-htmldiff": "^0.9.3",
+    "nodejs-sh": "^0.1.0",
+    "wordwrap": "^1.0.0"
+  }
+}
