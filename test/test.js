@@ -15,9 +15,12 @@ const test = ext => async function () {
 }
 
 describe('Basic tests', function () {
-  it('Markdown', test('md'))
-  it('reStructuredText', test('rst'))
+  it('EPUB', test('epub'))
   it('LaTeX', test('tex'))
+  it('Markdown', test('md'))
+  it('Org mode', test('org'))
+  it('reStructuredText', test('rst'))
+  it('Textile', test('textile'))
   it('Word', test('docx'))
 })
 

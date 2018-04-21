@@ -46,6 +46,11 @@ function postprocess (html) {
     par.outerHTML = par.innerHTML
   })
 
+  // redundant title attributes
+  forEachR(document.getElementsByTagName('img'), image => {
+    if (image.title && image.title === image.alt) image.removeAttribute('title')
+  })
+
   // line by line diff of code blocks
   forEachR(document.getElementsByTagName('pre'), pre => {
     let post = pre.cloneNode(true)
@@ -140,8 +145,8 @@ const markdown = [
 async function render (html, wrap = 72) {
   html = postprocess(html)
 
-  let output = await pandoc('-f', 'html', '-t', markdown,
-    '--reference-links', '--wrap=none').end(html).toString()
+  let output = await pandoc('-f', 'html', '-t', markdown).end(html).toString()
+  output = await pandoc('-t', markdown, '--reference-links', '--wrap=none').end(output).toString()
   output = output
     .replace(/<span class="sub"><span class="del">([\s\S]*?)<\/span><span class="ins">([\s\S]*?)<\/span><\/span>/g, '{~~$1~>$2~~}')
     .replace(/<span class="del">([\s\S]*?)<\/span>/g, '{--$1--}')
