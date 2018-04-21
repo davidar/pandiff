@@ -5,6 +5,12 @@
 - Prose diffs for [any document format supported by Pandoc](https://pandoc.org/MANUAL.html)
 - [CriticMarkup](http://criticmarkup.com/) output
 
+## Installation
+
+```sh
+npm install -g pandiff
+```
+
 ## Usage
 
 ```sh
