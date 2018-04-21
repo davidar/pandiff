@@ -27,7 +27,12 @@ function postprocess (html) {
 
   // strip any pre-existing spans
   for (let span; (span = document.querySelector('span'));) {
-    span.outerHTML = span.innerHTML
+    if (['insertion', 'deletion'].includes(span.className)) {
+      let tag = span.className.slice(0, 3)
+      span.outerHTML = `<${tag}>${span.innerHTML}</${tag}>`
+    } else {
+      span.outerHTML = span.innerHTML
+    }
   }
 
   // strip figures
@@ -65,7 +70,7 @@ function postprocess (html) {
     let par = span.parentNode
     if (par && par.childNodes.length === 1 && inlineTags.has(par.tagName.toLowerCase())) {
       par.innerHTML = content
-      par.outerHTML = '<span class="' + span.className + '">' + par.outerHTML + '</span>'
+      par.outerHTML = `<span class="${span.className}">${par.outerHTML}</span>`
     }
   })
 
@@ -97,42 +102,44 @@ function postprocess (html) {
   return dom.serialize()
 }
 
-async function pandiff (text1, text2, {threshold = 0.5, wrap = 72} = {}) {
-  let args1 = []
-  if (text1 instanceof Array) {
-    args1 = text1.slice(1)
-    text1 = text1[0]
-  }
-  let args2 = []
-  if (text2 instanceof Array) {
-    args2 = text2.slice(1)
-    text2 = text2[0]
-  }
+async function convert (text, ...args) {
+  let html = await pandoc(...args).end(text).toString()
+  let extract = args.find(arg => arg.startsWith('--extract-media='))
+  if (extract) html = await pandoc(extract, '--from=html').end(html).toString()
+  return html
+}
 
-  let html = htmldiff(
-    await pandoc(...args1).end(text1).toString(),
-    await pandoc(...args2).end(text2).toString())
+async function pandiff (text1, text2, {threshold = 0.5, wrap = 72} = {}) {
+  let html1 = (text1 instanceof Array) ? await convert(...text1) : await convert(text1)
+  let html2 = (text2 instanceof Array) ? await convert(...text2) : await convert(text2)
+  let html = htmldiff(html1, html2)
+
   let unmodified = html.replace(/<del.*?del>/g, '').replace(/<ins.*?ins>/g, '')
   let similarity = unmodified.length / html.length
   if (similarity < threshold) {
     console.error(Math.round(100 - 100 * similarity) + '% of the content has changed')
     return null
+  } else {
+    return render(html, wrap)
   }
+}
 
-  let markdown = [
-    'markdown',
-    '-bracketed_spans',
-    '-fenced_code_attributes',
-    '-fenced_divs',
-    '-header_attributes',
-    '-inline_code_attributes',
-    '-link_attributes',
-    '-native_divs',
-    '-raw_html',
-    '-smart'
-  ].join('')
+const markdown = [
+  'markdown',
+  '-bracketed_spans',
+  '-fenced_code_attributes',
+  '-fenced_divs',
+  '-header_attributes',
+  '-inline_code_attributes',
+  '-link_attributes',
+  '-native_divs',
+  '-raw_html',
+  '-smart'
+].join('')
 
+async function render (html, wrap = 72) {
   html = postprocess(html)
+
   let output = await pandoc('-f', 'html', '-t', markdown,
     '--reference-links', '--wrap=none').end(html).toString()
   output = output
@@ -163,3 +170,5 @@ async function pandiff (text1, text2, {threshold = 0.5, wrap = 72} = {}) {
 }
 
 module.exports = pandiff
+module.exports.trackChanges = file =>
+  pandoc(file, '--track-changes=all').toString().then(render)

@@ -24,6 +24,6 @@ one~~} thing is impossible for God: To find{++ any++} sense in any
 copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 
-  [image]: minus.png
-  [1]: plus.png
+  [image]: /tmp/875291f0dd9b00396bfaafc8daf1afee27a0354b.png
+  [1]: /tmp/28e562d386ab268d1b3f1e57b8ebe06162df5d49.png
   [consectetur adipiscing elit]: https://en.wikipedia.org/wiki/Lorem_ipsum

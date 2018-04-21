@@ -6,7 +6,11 @@ const pandiff = require('..')
 
 const diff = fs.readFileSync('test/diff.md', 'utf8')
 const test = ext => async function () {
-  let output = await pandiff(['', 'test/old.' + ext], ['', 'test/new.' + ext], {threshold: 0})
+  let args = ['', '--extract-media=/tmp', '--resource-path=test']
+  let output = await pandiff(
+    [...args, 'test/old.' + ext],
+    [...args, 'test/new.' + ext],
+    {threshold: 0})
   expect(output).to.equal(diff)
 }
 
@@ -14,4 +18,12 @@ describe('Basic tests', function () {
   it('Markdown', test('md'))
   it('reStructuredText', test('rst'))
   it('LaTeX', test('tex'))
+  it('Word', test('docx'))
+})
+
+describe('Track Changes', function () {
+  ['deletion', 'insertion', 'move'].forEach(task => it(task, async function () {
+    let output = await pandiff.trackChanges(`test/track_changes_${task}.docx`)
+    expect(output).to.equal(fs.readFileSync(`test/track_changes_${task}.md`, 'utf8'))
+  }))
 })
