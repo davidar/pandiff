@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "diff": "^3.5.0",
-    "jsdom": "^11.8.0",
+    "jsdom": "^11.9.0",
     "node-htmldiff": "^0.9.3",
     "nodejs-sh": "^0.1.0",
     "wordwrap": "^1.0.0"
