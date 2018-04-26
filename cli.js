@@ -1,13 +1,46 @@
 #!/usr/bin/env node
+const commandLineArgs = require('command-line-args')
+const {pandoc} = require('nodejs-sh')
+const path = require('path')
+
 const pandiff = require('.')
 
-if (process.argv.length === 3 && process.argv[2].endsWith('.docx')) {
-  pandiff.trackChanges(process.argv[2])
-    .then(diff => process.stdout.write(diff))
-} else if (process.argv.length < 4) {
-  console.error('Usage: pandiff FILE1 FILE2')
-} else {
-  let [file1, file2] = process.argv.slice(2)
-  pandiff(['', file1], ['', file2], {threshold: 0})
-    .then(diff => process.stdout.write(diff))
+async function main ({files, output, standalone, to}) {
+  let outputExt = output ? path.extname(output) : null
+  if (outputExt === '.pdf') standalone = true
+
+  let text = ''
+  if (files && files.length === 1 && files[0].endsWith('.docx')) {
+    text = await pandiff.trackChanges(files[0])
+  } else if (files && files.length === 2) {
+    let [file1, file2] = files
+    text = await pandiff(['', file1], ['', file2], {threshold: 0})
+  } else {
+    console.error('Usage: pandiff FILE1 FILE2')
+    return
+  }
+
+  let opts = []
+  if (output) opts.push('-o', output)
+  if (standalone) opts.push('-s')
+  if (to) opts.push('-t', to)
+
+  if (to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
+    text = pandiff.criticLaTeX(text)
+    opts.push('--variable', 'colorlinks=true')
+  }
+
+  if (opts.length > 0) {
+    opts.push('--highlight-style=kate')
+    text = await pandoc(...opts).end(text).toString()
+  }
+
+  if (!output) process.stdout.write(text)
 }
+
+main(commandLineArgs([
+  {name: 'output', alias: 'o'},
+  {name: 'standalone', alias: 's', type: Boolean},
+  {name: 'to', alias: 't'},
+  {name: 'files', multiple: true, defaultOption: true}
+]))

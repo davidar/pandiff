@@ -21,6 +21,7 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
+    "command-line-args": "^5.0.2",
     "diff": "^3.5.0",
     "jsdom": "^11.9.0",
     "node-htmldiff": "^0.9.3",

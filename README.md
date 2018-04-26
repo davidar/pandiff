@@ -21,12 +21,13 @@ pandiff test/old.md test/new.md
 {~~Old~>New~~} Title
 ====================
 
-{--![image]--}
+{--![image](minus.png)--}
 
-{++![image][1]++}
+{++![image](plus.png)++}
 
 1.  Lorem ipsum dolor {++sit ++}amet
-2.  {++[consectetur adipiscing elit]++}
+2.  {++[consectetur adipiscing
+elit](https://en.wikipedia.org/wiki/Lorem_ipsum)++}
 3.  Lorem{-- ipsum--} dolor sit amet
 
 I really love *italic {~~fonts~>font-styles~~}* {~~here.~>there.~~}
@@ -43,8 +44,4 @@ living. The world owes you nothing. It was here first. {~~One~>Only
 one~~} thing is impossible for God: To find{++ any++} sense in any
 copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
-
-  [image]: minus.png
-  [1]: plus.png
-  [consectetur adipiscing elit]: https://en.wikipedia.org/wiki/Lorem_ipsum
 ````

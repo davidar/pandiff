@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 const {expect} = require('chai')
 const fs = require('fs')
+const {pandoc} = require('nodejs-sh')
 
 const pandiff = require('..')
 
@@ -14,7 +15,7 @@ const test = ext => async function () {
   expect(output).to.equal(diff)
 }
 
-describe('Basic tests', function () {
+describe('Input formats', function () {
   it('EPUB', test('epub'))
   it('LaTeX', test('tex'))
   it('Markdown', test('md'))
@@ -22,6 +23,19 @@ describe('Basic tests', function () {
   it('reStructuredText', test('rst'))
   it('Textile', test('textile'))
   it('Word', test('docx'))
+})
+
+describe('Output formats', function () {
+  it('LaTeX', async function () {
+    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'], {threshold: 0})
+    text = pandiff.criticLaTeX(text)
+    text = await pandoc(
+      '--highlight-style=kate',
+      '--standalone', '--to=latex',
+      '--variable', 'colorlinks=true'
+    ).end(text).toString()
+    expect(text).to.equal(fs.readFileSync('test/diff.tex', 'utf8'))
+  })
 })
 
 describe('Track Changes', function () {

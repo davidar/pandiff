@@ -142,15 +142,28 @@ const markdown = [
   '-smart'
 ].join('')
 
+const regex = {
+  critic: {
+    del: /\{--([\s\S]*?)--\}/g,
+    ins: /\{\+\+([\s\S]*?)\+\+\}/g,
+    sub: /\{~~((?:[^~]|(?:~(?!>)))+)~>((?:[^~]|(?:~(?!~\})))+)~~\}/g
+  },
+  span: {
+    del: /<span class="del">([\s\S]*?)<\/span>/g,
+    ins: /<span class="ins">([\s\S]*?)<\/span>/g,
+    sub: /<span class="sub"><span class="del">([\s\S]*?)<\/span><span class="ins">([\s\S]*?)<\/span><\/span>/g
+  }
+}
+
 async function render (html, wrap = 72) {
   html = postprocess(html)
 
   let output = await pandoc('-f', 'html', '-t', markdown).end(html).toString()
-  output = await pandoc('-t', markdown, '--reference-links', '--wrap=none').end(output).toString()
+  output = await pandoc('-t', markdown, '--wrap=none').end(output).toString()
   output = output
-    .replace(/<span class="sub"><span class="del">([\s\S]*?)<\/span><span class="ins">([\s\S]*?)<\/span><\/span>/g, '{~~$1~>$2~~}')
-    .replace(/<span class="del">([\s\S]*?)<\/span>/g, '{--$1--}')
-    .replace(/<span class="ins">([\s\S]*?)<\/span>/g, '{++$1++}')
+    .replace(regex.span.sub, '{~~$1~>$2~~}')
+    .replace(regex.span.del, '{--$1--}')
+    .replace(regex.span.ins, '{++$1++}')
 
   if (wrap) {
     let lines = []
@@ -177,3 +190,11 @@ async function render (html, wrap = 72) {
 module.exports = pandiff
 module.exports.trackChanges = file =>
   pandoc(file, '--track-changes=all').toString().then(render)
+module.exports.criticHTML = text => text
+  .replace(regex.critic.del, '<del>$1</del>')
+  .replace(regex.critic.ins, '<ins>$1</ins>')
+  .replace(regex.critic.sub, '<del>$1</del><ins>$2</ins>')
+module.exports.criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
+  .replace(regex.critic.del, '<span>\\color{Maroon}~~<span>$1</span>~~</span>')
+  .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
+  .replace(regex.critic.sub, '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>')

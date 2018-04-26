@@ -1,12 +1,13 @@
 {~~Old~>New~~} Title
 ====================
 
-{--![image]--}
+{--![image](/tmp/875291f0dd9b00396bfaafc8daf1afee27a0354b.png)--}
 
-{++![image][1]++}
+{++![image](/tmp/28e562d386ab268d1b3f1e57b8ebe06162df5d49.png)++}
 
 1.  Lorem ipsum dolor {++sit ++}amet
-2.  {++[consectetur adipiscing elit]++}
+2.  {++[consectetur adipiscing
+elit](https://en.wikipedia.org/wiki/Lorem_ipsum)++}
 3.  Lorem{-- ipsum--} dolor sit amet
 
 I really love *italic {~~fonts~>font-styles~~}* {~~here.~>there.~~}
@@ -23,7 +24,3 @@ living. The world owes you nothing. It was here first. {~~One~>Only
 one~~} thing is impossible for God: To find{++ any++} sense in any
 copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
-
-  [image]: /tmp/875291f0dd9b00396bfaafc8daf1afee27a0354b.png
-  [1]: /tmp/28e562d386ab268d1b3f1e57b8ebe06162df5d49.png
-  [consectetur adipiscing elit]: https://en.wikipedia.org/wiki/Lorem_ipsum
