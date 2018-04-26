@@ -108,7 +108,7 @@ function postprocess (html) {
 }
 
 async function convert (text, ...args) {
-  let html = await pandoc(...args).end(text).toString()
+  let html = await pandoc('--html-q-tags', ...args).end(text).toString()
   let extract = args.find(arg => arg.startsWith('--extract-media='))
   if (extract) html = await pandoc(extract, '--from=html').end(html).toString()
   return html

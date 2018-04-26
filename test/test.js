@@ -30,3 +30,10 @@ describe('Track Changes', function () {
     expect(output).to.equal(fs.readFileSync(`test/track_changes_${task}.md`, 'utf8'))
   }))
 })
+
+describe('Misc', function () {
+  it('quotes', async function () {
+    let output = await pandiff('said “foo bar”', 'said “Foo bar”', {threshold: 0})
+    expect(output).to.equal('said “{~~foo~>Foo~~} bar”\n')
+  })
+})
