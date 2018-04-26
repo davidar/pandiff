@@ -5,6 +5,7 @@
 - Prose diffs for [any document format supported by Pandoc](https://pandoc.org/MANUAL.html)
 - Supported output formats:
   - [CriticMarkup](http://criticmarkup.com/)
+  - HTML
   - PDF, via LaTeX
 
 ## Installation
@@ -47,6 +48,14 @@ one~~} thing is impossible for God: To find{++ any++} sense in any
 copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 ````
+
+---
+
+```sh
+pandiff old.md new.md -s -o diff.html
+```
+
+![](test/diff.html.png)
 
 ---
 

@@ -2,6 +2,7 @@ const {diffLines} = require('diff')
 const htmldiff = require('node-htmldiff')
 const {JSDOM} = require('jsdom')
 const {pandoc} = require('nodejs-sh')
+const path = require('path')
 const wordwrap = require('wordwrap')
 
 const forEachR = (a, f) => { for (let i = a.length - 1; i >= 0; i--) f(a[i]) }
@@ -198,3 +199,10 @@ module.exports.criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
   .replace(regex.critic.del, '<span>\\color{Maroon}~~<span>$1</span>~~</span>')
   .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
   .replace(regex.critic.sub, '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>')
+module.exports.pandocOptionsHTML = [
+  '--css', path.join(__dirname, 'node_modules/github-markdown-css/github-markdown.css'),
+  '--css', path.join(__dirname, 'pandiff.css'),
+  '--variable', 'include-before=<article class="markdown-body">',
+  '--variable', 'include-after=</article>',
+  '--self-contained'
+]

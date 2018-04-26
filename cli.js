@@ -28,6 +28,9 @@ async function main ({files, output, standalone, to}) {
   if (to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
     text = pandiff.criticLaTeX(text)
     opts.push('--variable', 'colorlinks=true')
+  } else if (to === 'html' || outputExt === '.html') {
+    text = pandiff.criticHTML(text)
+    if (standalone) opts = opts.concat(pandiff.pandocOptionsHTML)
   }
 
   if (opts.length > 0) {

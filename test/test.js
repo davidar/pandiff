@@ -26,6 +26,17 @@ describe('Input formats', function () {
 })
 
 describe('Output formats', function () {
+  it('HTML', async function () {
+    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'], {threshold: 0})
+    text = pandiff.criticHTML(text)
+    text = await pandoc(
+      '--highlight-style=kate',
+      '--resource-path=test',
+      '--standalone', '--to=html',
+      ...pandiff.pandocOptionsHTML
+    ).end(text).toString()
+    expect(text).to.equal(fs.readFileSync('test/diff.html', 'utf8'))
+  })
   it('LaTeX', async function () {
     let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'], {threshold: 0})
     text = pandiff.criticLaTeX(text)
