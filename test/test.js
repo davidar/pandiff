@@ -1,7 +1,6 @@
 /* eslint-env mocha */
 const {expect} = require('chai')
 const fs = require('fs')
-const {pandoc} = require('nodejs-sh')
 
 const pandiff = require('..')
 
@@ -27,24 +26,13 @@ describe('Input formats', function () {
 
 describe('Output formats', function () {
   it('HTML', async function () {
-    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'], {threshold: 0})
-    text = pandiff.criticHTML(text)
-    text = await pandoc(
-      '--highlight-style=kate',
-      '--resource-path=test',
-      '--standalone', '--to=html',
-      ...pandiff.pandocOptionsHTML
-    ).end(text).toString()
+    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'],
+      {threshold: 0, standalone: true, to: 'html', outputOpts: ['--resource-path=test']})
     expect(text).to.equal(fs.readFileSync('test/diff.html', 'utf8'))
   })
   it('LaTeX', async function () {
-    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'], {threshold: 0})
-    text = pandiff.criticLaTeX(text)
-    text = await pandoc(
-      '--highlight-style=kate',
-      '--standalone', '--to=latex',
-      '--variable', 'colorlinks=true'
-    ).end(text).toString()
+    let text = await pandiff(['', 'test/old.md'], ['', 'test/new.md'],
+      {threshold: 0, standalone: true, to: 'latex'})
     expect(text).to.equal(fs.readFileSync('test/diff.tex', 'utf8'))
   })
 })

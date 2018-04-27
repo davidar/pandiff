@@ -115,7 +115,8 @@ async function convert (text, ...args) {
   return html
 }
 
-async function pandiff (text1, text2, {threshold = 0.5, wrap = 72} = {}) {
+async function pandiff (text1, text2,
+  {threshold = 0.5, wrap = 72, output, standalone, to, outputOpts = []} = {}) {
   let html1 = (text1 instanceof Array) ? await convert(...text1) : await convert(text1)
   let html2 = (text2 instanceof Array) ? await convert(...text2) : await convert(text2)
   let html = htmldiff(html1, html2)
@@ -126,7 +127,8 @@ async function pandiff (text1, text2, {threshold = 0.5, wrap = 72} = {}) {
     console.error(Math.round(100 - 100 * similarity) + '% of the content has changed')
     return null
   } else {
-    return render(html, wrap)
+    let text = await render(html, wrap)
+    return postrender(text, {output, standalone, to, outputOpts})
   }
 }
 
@@ -188,25 +190,57 @@ async function render (html, wrap = 72) {
   return output
 }
 
-module.exports = pandiff
-module.exports.trackChanges = file =>
-  pandoc(file, '--track-changes=all').toString().then(render)
-module.exports.criticHTML = text => text
+const criticHTML = text => text
   .replace(regex.critic.del, '<del>$1</del>')
   .replace(regex.critic.ins, '<ins>$1</ins>')
   .replace(regex.critic.sub, '<del>$1</del><ins>$2</ins>')
-module.exports.criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
+
+const criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
   .replace(regex.critic.del, '<span>\\color{Maroon}~~<span>$1</span>~~</span>')
   .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
   .replace(regex.critic.sub, '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>')
-module.exports.criticTrackChanges = text => text
+
+const criticTrackChanges = text => text
   .replace(regex.critic.del, '<span class="deletion">$1</span>')
   .replace(regex.critic.ins, '<span class="insertion">$1</span>')
   .replace(regex.critic.sub, '<span class="deletion">$1</span><span class="insertion">$2</span>')
-module.exports.pandocOptionsHTML = [
+
+const pandocOptionsHTML = [
   '--css', path.join(__dirname, 'node_modules/github-markdown-css/github-markdown.css'),
   '--css', path.join(__dirname, 'pandiff.css'),
   '--variable', 'include-before=<article class="markdown-body">',
   '--variable', 'include-after=</article>',
   '--self-contained'
 ]
+
+async function postrender (text, {output, standalone, to, outputOpts = []}) {
+  let outputExt = output ? path.extname(output) : null
+  if (outputExt === '.pdf') standalone = true
+
+  let opts = outputOpts
+  if (output) opts.push('-o', output)
+  if (standalone) opts.push('-s')
+  if (to) opts.push('-t', to)
+
+  if (to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
+    text = criticLaTeX(text)
+    opts.push('--variable', 'colorlinks=true')
+  } else if (to === 'docx' || outputExt === '.docx') {
+    text = criticTrackChanges(text)
+  } else if (to === 'html' || outputExt === '.html') {
+    text = criticHTML(text)
+    if (standalone) opts = opts.concat(pandocOptionsHTML)
+  }
+
+  if (opts.length > 0) {
+    opts.push('--highlight-style=kate')
+    text = await pandoc(...opts).end(text).toString()
+  }
+
+  if (output) return null
+  else return text
+}
+
+module.exports = pandiff
+module.exports.trackChanges = (file, opts = {}) =>
+  pandoc(file, '--track-changes=all').toString().then(render).then(text => postrender(text, opts))
