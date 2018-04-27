@@ -199,6 +199,10 @@ module.exports.criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
   .replace(regex.critic.del, '<span>\\color{Maroon}~~<span>$1</span>~~</span>')
   .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
   .replace(regex.critic.sub, '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>')
+module.exports.criticTrackChanges = text => text
+  .replace(regex.critic.del, '<span class="deletion">$1</span>')
+  .replace(regex.critic.ins, '<span class="insertion">$1</span>')
+  .replace(regex.critic.sub, '<span class="deletion">$1</span><span class="insertion">$2</span>')
 module.exports.pandocOptionsHTML = [
   '--css', path.join(__dirname, 'node_modules/github-markdown-css/github-markdown.css'),
   '--css', path.join(__dirname, 'pandiff.css'),

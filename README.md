@@ -7,6 +7,7 @@
   - [CriticMarkup](http://criticmarkup.com/)
   - HTML
   - PDF, via LaTeX
+  - [Word docx](https://en.wikipedia.org/wiki/Office_Open_XML) with [Track Changes](https://support.office.com/en-us/article/track-changes-in-word-197ba630-0f5f-4a8e-9a77-3712475e806a)
 
 ## Installation
 
@@ -49,7 +50,7 @@ copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 ````
 
----
+### HTML output
 
 ```sh
 pandiff old.md new.md -s -o diff.html
@@ -57,10 +58,30 @@ pandiff old.md new.md -s -o diff.html
 
 ![](test/diff.html.png)
 
----
+### PDF output
 
 ```sh
 pandiff old.md new.md -o diff.pdf
 ```
 
 ![](test/diff.pdf.png)
+
+### Word Track Changes
+
+```sh
+pandiff old.md new.md -o diff.docx
+```
+
+```sh
+pandiff test/track_changes_move.docx
+```
+
+```markdown
+Here is some text.
+
+{++Here is the text to be moved.++}
+
+Here is some more text.
+
+{--Here is the text to be moved.--}
+```
