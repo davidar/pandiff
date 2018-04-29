@@ -35,6 +35,12 @@ describe('Output formats', function () {
       {threshold: 0, standalone: true, to: 'latex'})
     expect(text).to.equal(fs.readFileSync('test/diff.tex', 'utf8'))
   })
+  it('Word', async function () {
+    await pandiff(['', 'test/old.md'], ['', 'test/new.md'],
+      {threshold: 0, output: '/tmp/diff.docx', outputOpts: ['--resource-path=test']})
+    let text = await pandiff.trackChanges('/tmp/diff.docx')
+    expect(text).to.equal(fs.readFileSync('test/diff.docx.md', 'utf8'))
+  })
 })
 
 describe('Track Changes', function () {

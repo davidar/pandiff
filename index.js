@@ -57,6 +57,7 @@ function postprocess (html) {
     let post = pre.cloneNode(true)
     removeNodes(pre.getElementsByTagName('ins'))
     removeNodes(post.getElementsByTagName('del'))
+    if (pre.textContent === post.textContent) return
     pre.className = 'diff'
     pre.textContent = diffu(pre.textContent, post.textContent)
   })
