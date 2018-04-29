@@ -21,22 +21,48 @@ async function main (opts) {
     opts.files = true
     text = await pandiff(file1, file2, opts)
   } else {
-    console.error('Usage: pandiff FILE1 FILE2')
+    help()
   }
   if (text) process.stdout.write(text)
 }
 
-main(commandLineArgs([
+const File = s => s
+const Format = s => s
+const Path = s => s
+
+const optionDefinitions = [
   {name: 'atx-headers', type: Boolean},
   {name: 'columns', type: Number},
-  {name: 'extract-media'},
-  {name: 'highlight-style'},
-  {name: 'output', alias: 'o'},
+  {name: 'extract-media', type: Path},
+  {name: 'from', alias: 'f', type: Format},
+  {name: 'help', alias: 'h', type: Boolean},
+  {name: 'highlight-style', type: String},
+  {name: 'output', alias: 'o', type: File},
   {name: 'reference-links', type: Boolean},
-  {name: 'resource-path'},
+  {name: 'resource-path', type: Path},
   {name: 'standalone', alias: 's', type: Boolean},
-  {name: 'to', alias: 't'},
+  {name: 'to', alias: 't', type: Format},
   {name: 'version', alias: 'v', type: Boolean},
-  {name: 'wrap'},
+  {name: 'wrap', type: String},
   {name: 'files', multiple: true, defaultOption: true}
-]))
+]
+
+function help () {
+  console.error('Usage: pandiff [OPTIONS] FILE1 FILE2')
+  for (const opt of optionDefinitions) {
+    if (opt.defaultOption) continue
+    let line = '  '
+    if (opt.alias) {
+      line += `-${opt.alias},`
+    } else {
+      line += '   '
+    }
+    line += ` --${opt.name}`
+    if (opt.type && opt.type !== Boolean) {
+      line += '=' + opt.type.name.toUpperCase()
+    }
+    console.error(line)
+  }
+}
+
+main(commandLineArgs(optionDefinitions))
