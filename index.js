@@ -109,27 +109,46 @@ function postprocess (html) {
   return dom.serialize()
 }
 
-async function convert (text, ...args) {
-  let html = await pandoc('--html-q-tags', ...args).end(text).toString()
-  let extract = args.find(arg => arg.startsWith('--extract-media='))
-  if (extract) html = await pandoc(extract, '--from=html').end(html).toString()
+function buildArgs (opts, ...params) {
+  let args = []
+  for (const param of params) {
+    if (param in opts) {
+      if (typeof opts[param] === 'boolean') {
+        if (opts[param] === true) args.push(`--${param}`)
+      } else {
+        args.push(`--${param}=${opts[param]}`)
+      }
+    }
+  }
+  return args
+}
+
+async function convert (source, opts = {}) {
+  let args = buildArgs(opts, 'extract-media', 'from', 'resource-path')
+  args.push('--html-q-tags')
+  let html
+  if (opts.files) {
+    html = await pandoc(...args, source).toString()
+  } else {
+    html = await pandoc(...args).end(source).toString()
+  }
+  if ('extract-media' in opts) html = await pandoc(...args, '--from=html').end(html).toString()
   return html
 }
 
-async function pandiff (text1, text2,
-  {threshold = 0.5, wrap = 72, output, standalone, to, outputOpts = []} = {}) {
-  let html1 = (text1 instanceof Array) ? await convert(...text1) : await convert(text1)
-  let html2 = (text2 instanceof Array) ? await convert(...text2) : await convert(text2)
+async function pandiff (source1, source2, opts = {}) {
+  let html1 = await convert(source1, opts)
+  let html2 = await convert(source2, opts)
   let html = htmldiff(html1, html2)
 
   let unmodified = html.replace(/<del.*?del>/g, '').replace(/<ins.*?ins>/g, '')
   let similarity = unmodified.length / html.length
-  if (similarity < threshold) {
+  if (opts.threshold && similarity < opts.threshold) {
     console.error(Math.round(100 - 100 * similarity) + '% of the content has changed')
     return null
   } else {
-    let text = await render(html, wrap)
-    return postrender(text, {output, standalone, to, outputOpts})
+    let text = await render(html, opts)
+    return postrender(text, opts)
   }
 }
 
@@ -159,36 +178,38 @@ const regex = {
   }
 }
 
-async function render (html, wrap = 72) {
+async function render (html, opts = {}) {
   html = postprocess(html)
 
+  let args = buildArgs(opts, 'atx-headers', 'reference-links')
+  args.push('--wrap=none')
+
   let output = await pandoc('-f', 'html', '-t', markdown).end(html).toString()
-  output = await pandoc('-t', markdown, '--wrap=none').end(output).toString()
+  output = await pandoc(...args, '-t', markdown).end(output).toString()
   output = output
     .replace(regex.span.sub, '{~~$1~>$2~~}')
     .replace(regex.span.del, '{--$1--}')
     .replace(regex.span.ins, '{++$1++}')
 
-  if (wrap) {
-    let lines = []
-    let pre = false
-    for (const line of output.split('\n')) {
-      let lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0
-      if (line.startsWith('```')) pre = !pre
-      if (pre || line.startsWith('  [')) {
-        lines.push(line)
-      } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
-        lines.push(line.slice(0, lastLineLen))
-      } else {
-        for (const wrapped of wordwrap(wrap)(line).split('\n')) {
-          lines.push(wrapped)
-        }
+  let {wrap = 72} = opts
+  let lines = []
+  let pre = false
+  for (const line of output.split('\n')) {
+    let lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0
+    if (line.startsWith('```')) pre = !pre
+    if (pre || line.startsWith('  [')) {
+      lines.push(line)
+    } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
+      lines.push(line.slice(0, lastLineLen))
+    } else if (wrap) {
+      for (const wrapped of wordwrap(wrap)(line).split('\n')) {
+        lines.push(wrapped)
       }
+    } else {
+      lines.push(line)
     }
-    output = lines.join('\n')
   }
-
-  return output
+  return lines.join('\n')
 }
 
 const criticHTML = text => text
@@ -214,32 +235,30 @@ const pandocOptionsHTML = [
   '--self-contained'
 ]
 
-async function postrender (text, {output, standalone, to, outputOpts = []}) {
-  let outputExt = output ? path.extname(output) : null
-  if (outputExt === '.pdf') standalone = true
+async function postrender (text, opts = {}) {
+  if (!opts.output && !opts.to) return text
 
-  let opts = outputOpts
-  if (output) opts.push('-o', output)
-  if (standalone) opts.push('-s')
-  if (to) opts.push('-t', to)
+  if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate'
+  let args = buildArgs(opts, 'highlight-style', 'output', 'resource-path', 'standalone', 'to')
+  let outputExt = opts.output ? path.extname(opts.output) : null
+  if (outputExt === '.pdf') opts.standalone = true
 
-  if (to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
+  if (opts.to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
     text = criticLaTeX(text)
-    opts.push('--variable', 'colorlinks=true')
-  } else if (to === 'docx' || outputExt === '.docx') {
+    args.push('--variable', 'colorlinks=true')
+  } else if (opts.to === 'docx' || outputExt === '.docx') {
     text = criticTrackChanges(text)
-  } else if (to === 'html' || outputExt === '.html') {
+  } else if (opts.to === 'html' || outputExt === '.html') {
     text = criticHTML(text)
-    if (standalone) opts = opts.concat(pandocOptionsHTML)
+    if (opts.standalone) args = args.concat(pandocOptionsHTML)
   }
 
-  if (opts.length > 0) {
-    opts.push('--highlight-style=kate')
-    text = await pandoc(...opts).end(text).toString()
+  if (opts.output) {
+    await pandoc(...args).end(text)
+    return null
+  } else {
+    return pandoc(...args).end(text).toString()
   }
-
-  if (output) return null
-  else return text
 }
 
 module.exports = pandiff
