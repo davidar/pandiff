@@ -8,6 +8,7 @@
   - HTML
   - PDF, via LaTeX
   - [Word docx](https://en.wikipedia.org/wiki/Office_Open_XML) with [Track Changes](https://support.office.com/en-us/article/track-changes-in-word-197ba630-0f5f-4a8e-9a77-3712475e806a)
+- Respects document structure, so won't produce broken markup like `wdiff`
 
 ## Installation
 
@@ -56,7 +57,7 @@ because Fiction is obliged to stick to possibilities; Truth isn’t.
 pandiff old.md new.md -s -o diff.html
 ```
 
-![](test/diff.html.png)
+[![](test/diff.html.png)](https://rawgit.com/davidar/pandiff/master/test/diff.html)
 
 ### PDF output
 
@@ -64,7 +65,7 @@ pandiff old.md new.md -s -o diff.html
 pandiff old.md new.md -o diff.pdf
 ```
 
-![](test/diff.pdf.png)
+[![](test/diff.pdf.png)](https://rawgit.com/davidar/pandiff/master/test/diff.pdf)
 
 ### Word Track Changes
 
