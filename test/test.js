@@ -63,6 +63,8 @@ describe('Misc', function () {
   it('quotes', async function () {
     let output = await pandiff('said “foo bar”', 'said “Foo bar”')
     expect(output).to.equal('said “{~~foo~>Foo~~} bar”\n')
+    output = await pandiff('', 'said “foo bar”')
+    expect(output).to.equal('{++said “foo bar”++}\n')
   })
   it('threshold', async function () {
     let output = await pandiff('foo bar baz', 'Foo bar baz')

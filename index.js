@@ -71,7 +71,7 @@ function postprocess (html) {
   })
 
   // pull diff tags outside inline tags when possible
-  const inlineTags = new Set(['a', 'code', 'em', 'strong', 'sub', 'sup'])
+  const inlineTags = new Set(['a', 'code', 'em', 'q', 'strong', 'sub', 'sup'])
   forEachR(document.getElementsByTagName('span'), span => {
     let content = span.innerHTML
     let par = span.parentNode
