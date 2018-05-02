@@ -147,8 +147,7 @@ async function pandiff (source1, source2, opts = {}) {
     console.error(Math.round(100 - 100 * similarity) + '% of the content has changed')
     return null
   } else {
-    let text = await render(html, opts)
-    return postrender(text, opts)
+    return render(html, opts)
   }
 }
 
@@ -209,7 +208,8 @@ async function render (html, opts = {}) {
       lines.push(line)
     }
   }
-  return lines.join('\n')
+  let text = lines.join('\n')
+  return postrender(text, opts)
 }
 
 const criticHTML = text => text
@@ -263,4 +263,4 @@ async function postrender (text, opts = {}) {
 
 module.exports = pandiff
 module.exports.trackChanges = (file, opts = {}) =>
-  pandoc(file, '--track-changes=all').toString().then(render).then(text => postrender(text, opts))
+  pandoc(file, '--track-changes=all').toString().then(html => render(html, opts))
