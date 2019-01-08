@@ -38,6 +38,7 @@ const optionDefinitions = [
   {name: 'help', alias: 'h', type: Boolean},
   {name: 'highlight-style', type: String},
   {name: 'output', alias: 'o', type: File},
+  {name: 'pdf-engine', type: String},
   {name: 'reference-links', type: Boolean},
   {name: 'resource-path', type: Path},
   {name: 'standalone', alias: 's', type: Boolean},
