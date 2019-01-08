@@ -72,4 +72,10 @@ describe('Misc', function () {
     output = await pandiff('foo bar baz', 'Foo bar baz', {threshold: 0.5})
     expect(output).to.equal(null)
   })
+  it('math', async function () {
+    let output = await pandiff('let $2+2=4$', 'let $2+2=5$')
+    expect(output).to.equal('let {~~$2+2=4$~>$2+2=5$~~}\n')
+    output = await pandiff('$$a b c$$', '$$a d c$$')
+    expect(output).to.equal('{--$$a b c$$--}\n\n{++$$a d c$$++}\n')
+  })
 })

@@ -26,6 +26,23 @@ function postprocess (html) {
   let dom = new JSDOM(html)
   let document = dom.window.document
 
+  // handle math
+  forEachR(document.querySelectorAll('span.math.inline'), math => {
+    math.innerHTML = '\\(' + math.innerHTML + '\\)'
+  })
+  forEachR(document.querySelectorAll('span.math.display'), math => {
+    math.innerHTML = '\\[' + math.innerHTML + '\\]'
+  })
+  forEachR(document.querySelectorAll('span.math'), math => {
+    let post = math.cloneNode(true)
+    removeNodes(math.getElementsByTagName('ins'))
+    removeNodes(post.getElementsByTagName('del'))
+    math.textContent = math.textContent
+    post.textContent = post.textContent
+    if (math.textContent === post.textContent) return
+    math.innerHTML = '<del>' + math.innerHTML + '</del><ins>' + post.innerHTML + '</ins>'
+  })
+
   // strip any pre-existing spans
   for (let span; (span = document.querySelector('span'));) {
     if (['insertion', 'deletion'].includes(span.className)) {
@@ -125,13 +142,14 @@ function buildArgs (opts, ...params) {
 
 async function convert (source, opts = {}) {
   let args = buildArgs(opts, 'extract-media', 'from', 'resource-path')
-  args.push('--html-q-tags')
+  args.push('--html-q-tags', '--mathjax')
   let html
   if (opts.files) {
     html = await pandoc(...args, source).toString()
   } else {
     html = await pandoc(...args).end(source).toString()
   }
+  html = html.replace(/\\[()[\]]/g, '')
   if ('extract-media' in opts) html = await pandoc(...args, '--from=html').end(html).toString()
   return html
 }
@@ -183,7 +201,7 @@ async function render (html, opts = {}) {
   let args = buildArgs(opts, 'atx-headers', 'reference-links')
   args.push('--wrap=none')
 
-  let output = await pandoc('-f', 'html', '-t', markdown).end(html).toString()
+  let output = await pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown).end(html).toString()
   output = await pandoc(...args, '-t', markdown).end(output).toString()
   output = output
     .replace(regex.span.sub, '{~~$1~>$2~~}')
