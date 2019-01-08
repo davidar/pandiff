@@ -65,4 +65,4 @@ function help () {
   }
 }
 
-main(commandLineArgs(optionDefinitions))
+main(commandLineArgs(optionDefinitions)).catch(err => { console.error('Error:', err) })
