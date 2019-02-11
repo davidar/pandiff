@@ -246,7 +246,7 @@ const criticTrackChanges = text => text
   .replace(regex.critic.sub, '<span class="deletion">$1</span><span class="insertion">$2</span>')
 
 const pandocOptionsHTML = [
-  '--css', path.join(__dirname, 'node_modules/github-markdown-css/github-markdown.css'),
+  '--css', require.resolve('github-markdown-css'),
   '--css', path.join(__dirname, 'pandiff.css'),
   '--variable', 'include-before=<article class="markdown-body">',
   '--variable', 'include-after=</article>',
