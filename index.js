@@ -200,6 +200,7 @@ async function render (html, opts = {}) {
 
   let args = buildArgs(opts, 'atx-headers', 'reference-links')
   args.push('--wrap=none')
+  if (opts.output || opts.to) args.push('--atx-headers')
 
   let output = await pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown).end(html).toString()
   output = await pandoc(...args, '-t', markdown).end(output).toString()
@@ -268,6 +269,9 @@ async function postrender (text, opts = {}) {
     text = criticTrackChanges(text)
   } else if (opts.to === 'html' || outputExt === '.html') {
     text = criticHTML(text)
+    let paras = text.split('\n\n').map(p =>
+      (p.startsWith('<ins>') || p.startsWith('<del>')) ? '<p>' + p + '</p>' : p)
+    text = paras.join('\n\n')
     if (opts.standalone) args = args.concat(pandocOptionsHTML)
   }
 

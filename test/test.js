@@ -78,4 +78,8 @@ describe('Misc', function () {
     output = await pandiff('$$a b c$$', '$$a d c$$')
     expect(output).to.equal('{--$$a b c$$--}\n\n{++$$a d c$$++}\n')
   })
+  it('paras', async function () {
+    let output = await pandiff('', 'foo\n\nbar', {to: 'html'})
+    expect(output).to.equal('<p>\n<ins>\nfoo\n</ins>\n</p>\n<p>\n<ins>\nbar\n</ins>\n</p>\n')
+  })
 })
