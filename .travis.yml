@@ -4,5 +4,5 @@ language: node_js
 node_js:
 - node
 before_install:
-- wget https://github.com/jgm/pandoc/releases/download/2.5/pandoc-2.5-1-amd64.deb
+- wget https://github.com/jgm/pandoc/releases/download/2.6/pandoc-2.6-1-amd64.deb
 - sudo dpkg -i pandoc-*.deb
