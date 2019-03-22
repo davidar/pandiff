@@ -53,6 +53,17 @@ copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 ````
 
+### Git integration
+
+Configure git by running the following commands:
+
+```sh
+git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE"'
+git config --global alias.pandiff 'difftool -t pandiff'
+```
+
+Now you can use `git pandiff` wherever you would usually use `git diff`.
+
 ### HTML output
 
 ```sh
