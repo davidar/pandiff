@@ -51,6 +51,10 @@ describe('Track Changes', function () {
 })
 
 describe('Misc', function () {
+  it('normalise', async function () {
+    let text = await pandiff.normalise(fs.readFileSync('test/normalise.in.md', 'utf8'))
+    expect(text).to.equal(fs.readFileSync('test/normalise.out.md', 'utf8'))
+  })
   it('atx', async function () {
     let text = await pandiff('test/old.md', 'test/new.md', {
       'atx-headers': true,

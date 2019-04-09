@@ -246,6 +246,15 @@ const criticTrackChanges = text => text
   .replace(regex.critic.ins, '<span class="insertion">$1</span>')
   .replace(regex.critic.sub, '<span class="deletion">$1</span><span class="insertion">$2</span>')
 
+const criticReject = text => text
+  .replace(regex.critic.del, '$1')
+  .replace(regex.critic.ins, '')
+  .replace(regex.critic.sub, '$1')
+const criticAccept = text => text
+  .replace(regex.critic.del, '')
+  .replace(regex.critic.ins, '$1')
+  .replace(regex.critic.sub, '$2')
+
 const pandocOptionsHTML = [
   '--css', require.resolve('github-markdown-css'),
   '--css', path.join(__dirname, 'pandiff.css'),
@@ -286,3 +295,5 @@ async function postrender (text, opts = {}) {
 module.exports = pandiff
 module.exports.trackChanges = (file, opts = {}) =>
   pandoc(file, '--track-changes=all').toString().then(html => render(html, opts))
+module.exports.normalise = (text, opts = {}) =>
+  pandiff(criticReject(text), criticAccept(text), opts)

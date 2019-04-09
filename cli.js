@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const commandLineArgs = require('command-line-args')
+const fs = require('fs')
 const pandiff = require('.')
 const pkg = require('./package.json')
 
@@ -16,6 +17,10 @@ async function main (opts) {
     console.error('pandiff', pkg.version)
   } else if (files && files.length === 1 && files[0].endsWith('.docx')) {
     text = await pandiff.trackChanges(files[0], opts)
+  } else if (files && files.length === 1 && files[0].endsWith('.md')) {
+    text = fs.readFileSync(files[0], 'utf8')
+    delete opts.files
+    text = await pandiff.normalise(text, opts)
   } else if (files && files.length === 2) {
     let [file1, file2] = files
     opts.files = true
