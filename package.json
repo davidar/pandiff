@@ -20,7 +20,7 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "command-line-args": "^5.0.2",
+    "command-line-args": "^5.1.1",
     "diff": "^3.5.0",
     "github-markdown-css": "^2.10.0",
     "jsdom": "^11.12.0",
