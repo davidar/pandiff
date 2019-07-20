@@ -1,6 +1,6 @@
 {
   "name": "pandiff",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Prose diffs for any document format supported by Pandoc",
   "main": "index.js",
   "bin": "cli.js",
