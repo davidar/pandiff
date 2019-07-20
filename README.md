@@ -53,6 +53,33 @@ copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 ````
 
+### Options
+
+```sh
+pandiff --help
+```
+
+```
+Usage: pandiff [OPTIONS] FILE1 FILE2
+      --atx-headers
+      --bibliography=FILE
+      --columns=NUMBER
+      --extract-media=PATH
+  -F, --filter=STRING
+  -f, --from=FORMAT
+  -h, --help
+      --highlight-style=STRING
+      --lua-filter=FILE
+  -o, --output=FILE
+      --pdf-engine=STRING
+      --reference-links
+      --resource-path=PATH
+  -s, --standalone
+  -t, --to=FORMAT
+  -v, --version
+      --wrap=STRING
+```
+
 ### Git integration
 
 Configure git by running the following commands:
