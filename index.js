@@ -43,8 +43,8 @@ function postprocess (html) {
     math.innerHTML = '<del>' + math.innerHTML + '</del><ins>' + post.innerHTML + '</ins>'
   })
 
-  // strip any pre-existing spans
-  for (let span; (span = document.querySelector('span'));) {
+  // strip any pre-existing spans or divs
+  for (let span; (span = document.querySelector('span,div,section'));) {
     if (['insertion', 'deletion'].includes(span.className)) {
       let tag = span.className.slice(0, 3)
       span.outerHTML = `<${tag}>${span.innerHTML}</${tag}>`
@@ -53,10 +53,15 @@ function postprocess (html) {
     }
   }
 
-  // strip figures
-  removeNodes(document.getElementsByTagName('figcaption'))
+  // fix figures with modified images
   forEachR(document.getElementsByTagName('figure'), figure => {
-    figure.outerHTML = '<p>' + figure.innerHTML.trim() + '</p>'
+    let imgs = figure.getElementsByTagName('img')
+    if (imgs.length > 1) {
+      let after = figure.cloneNode(true)
+      removeNodes(figure.getElementsByTagName('ins'))
+      removeNodes(after.getElementsByTagName('del'))
+      figure.outerHTML = '<div class="del">' + figure.outerHTML + '</div><div class="ins">' + after.outerHTML + '</div>'
+    }
   })
 
   // compact lists
@@ -177,7 +182,6 @@ const markdown = [
   '-header_attributes',
   '-inline_code_attributes',
   '-link_attributes',
-  '-native_divs',
   '-raw_html',
   '-smart'
 ].join('')
@@ -192,6 +196,10 @@ const regex = {
     del: /<span class="del">([\s\S]*?)<\/span>/g,
     ins: /<span class="ins">([\s\S]*?)<\/span>/g,
     sub: /<span class="sub"><span class="del">([\s\S]*?)<\/span><span class="ins">([\s\S]*?)<\/span><\/span>/g
+  },
+  div: {
+    del: /<div class="del">\s*([\s\S]*?)\s*<\/div>/g,
+    ins: /<div class="ins">\s*([\s\S]*?)\s*<\/div>/g
   }
 }
 
@@ -208,6 +216,8 @@ async function render (html, opts = {}) {
     .replace(regex.span.sub, '{~~$1~>$2~~}')
     .replace(regex.span.del, '{--$1--}')
     .replace(regex.span.ins, '{++$1++}')
+    .replace(regex.div.del, '{--$1--}')
+    .replace(regex.div.ins, '{++$1++}')
 
   let {wrap = 72} = opts
   let lines = []

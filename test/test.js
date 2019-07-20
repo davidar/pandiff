@@ -88,6 +88,10 @@ describe('Misc', function () {
   })
   it('citeproc', async function () {
     let output = await pandiff('@item1', '@item2', {bibliography: 'test/biblio.bib'})
-    expect(output).to.equal('Doe {~~(2005)~>(2006)~~}\n')
+    expect(output).to.equal('Doe {~~(2005)~>(2006)~~}\n\nDoe, John. {~~2005.~>2006. “Article.”~~} *{~~First Book~>Journal of\nGeneric Studies~~}*{~~. Cambridge: Cambridge University Press.~> 6:\n33–34.~~}\n')
+  })
+  it('captions', async function () {
+    let output = await pandiff('![foo](x.png)', '![bar](x.png)')
+    expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n')
   })
 })
