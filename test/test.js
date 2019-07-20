@@ -86,4 +86,8 @@ describe('Misc', function () {
     let output = await pandiff('', 'foo\n\nbar', {to: 'html'})
     expect(output).to.equal('<p>\n<ins>\nfoo\n</ins>\n</p>\n<p>\n<ins>\nbar\n</ins>\n</p>\n')
   })
+  it('citeproc', async function () {
+    let output = await pandiff('@item1', '@item2', {bibliography: 'test/biblio.bib'})
+    expect(output).to.equal('Doe {~~(2005)~>(2006)~~}\n')
+  })
 })

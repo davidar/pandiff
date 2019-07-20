@@ -37,11 +37,14 @@ const Path = s => s
 
 const optionDefinitions = [
   {name: 'atx-headers', type: Boolean},
+  {name: 'bibliography', type: File},
   {name: 'columns', type: Number},
   {name: 'extract-media', type: Path},
+  {name: 'filter', alias: 'F', type: String},
   {name: 'from', alias: 'f', type: Format},
   {name: 'help', alias: 'h', type: Boolean},
   {name: 'highlight-style', type: String},
+  {name: 'lua-filter', type: File},
   {name: 'output', alias: 'o', type: File},
   {name: 'pdf-engine', type: String},
   {name: 'reference-links', type: Boolean},

@@ -141,7 +141,7 @@ function buildArgs (opts, ...params) {
 }
 
 async function convert (source, opts = {}) {
-  let args = buildArgs(opts, 'extract-media', 'from', 'resource-path')
+  let args = buildArgs(opts, 'bibliography', 'extract-media', 'filter', 'from', 'lua-filter', 'resource-path')
   args.push('--html-q-tags', '--mathjax')
   let html
   if (opts.files) {
