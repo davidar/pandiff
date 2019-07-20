@@ -94,4 +94,8 @@ describe('Misc', function () {
     let output = await pandiff('![foo](x.png)', '![bar](x.png)')
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n')
   })
+  it('tables', async function () {
+    let output = await pandiff('test/old-table.md', 'test/new-table.md', {files: true, to: 'html'})
+    expect(output).to.equal(fs.readFileSync('test/diff-table.html', 'utf8'))
+  })
 })

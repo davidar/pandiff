@@ -179,10 +179,13 @@ const markdown = [
   '-bracketed_spans',
   '-fenced_code_attributes',
   '-fenced_divs',
+  '-grid_tables',
   '-header_attributes',
   '-inline_code_attributes',
   '-link_attributes',
-  '-raw_html',
+  '-multiline_tables',
+  '-pipe_tables',
+  '-simple_tables',
   '-smart'
 ].join('')
 
