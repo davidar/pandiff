@@ -137,6 +137,10 @@ function buildArgs (opts, ...params) {
     if (param in opts) {
       if (typeof opts[param] === 'boolean') {
         if (opts[param] === true) args.push(`--${param}`)
+      } else if (Array.isArray(opts[param])) {
+        for (const opt of opts[param]) {
+          args.push(`--${param}=${opt}`)
+        }
       } else {
         args.push(`--${param}=${opts[param]}`)
       }
