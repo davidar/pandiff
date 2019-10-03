@@ -86,7 +86,7 @@ Configure git by running the following commands:
 
 ```sh
 git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE"'
-git config --global alias.pandiff 'difftool -t pandiff'
+git config --global alias.pandiff 'difftool -t pandiff -y'
 ```
 
 Now you can use `git pandiff` wherever you would usually use `git diff`.
