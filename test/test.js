@@ -1,12 +1,12 @@
 /* eslint-env mocha */
-const {expect} = require('chai')
+const { expect } = require('chai')
 const fs = require('fs')
 
 const pandiff = require('..')
 
 const diff = fs.readFileSync('test/diff.md', 'utf8')
 const test = ext => async function () {
-  let output = await pandiff('test/old.' + ext, 'test/new.' + ext, {
+  const output = await pandiff('test/old.' + ext, 'test/new.' + ext, {
     'extract-media': '/tmp',
     files: true,
     'resource-path': 'test'
@@ -26,37 +26,37 @@ describe('Input formats', function () {
 
 describe('Output formats', function () {
   it('HTML', async function () {
-    let text = await pandiff('test/old.md', 'test/new.md',
-      {files: true, 'resource-path': 'test', standalone: true, to: 'html'})
+    const text = await pandiff('test/old.md', 'test/new.md',
+      { files: true, 'resource-path': 'test', standalone: true, to: 'html' })
     expect(text).to.equal(fs.readFileSync('test/diff.html', 'utf8'))
   })
   it('LaTeX', async function () {
-    let text = await pandiff('test/old.md', 'test/new.md',
-      {files: true, standalone: true, to: 'latex'})
+    const text = await pandiff('test/old.md', 'test/new.md',
+      { files: true, standalone: true, to: 'latex' })
     expect(text).to.equal(fs.readFileSync('test/diff.tex', 'utf8'))
   })
   it('Word', async function () {
     await pandiff('test/old.md', 'test/new.md',
-      {files: true, output: '/tmp/diff.docx', 'resource-path': 'test'})
-    let text = await pandiff.trackChanges('/tmp/diff.docx')
+      { files: true, output: '/tmp/diff.docx', 'resource-path': 'test' })
+    const text = await pandiff.trackChanges('/tmp/diff.docx')
     expect(text).to.equal(fs.readFileSync('test/diff.docx.md', 'utf8'))
   })
 })
 
 describe('Track Changes', function () {
   ['deletion', 'insertion', 'move'].forEach(task => it(task, async function () {
-    let output = await pandiff.trackChanges(`test/track_changes_${task}.docx`)
+    const output = await pandiff.trackChanges(`test/track_changes_${task}.docx`)
     expect(output).to.equal(fs.readFileSync(`test/track_changes_${task}.md`, 'utf8'))
   }))
 })
 
 describe('Misc', function () {
   it('normalise', async function () {
-    let text = await pandiff.normalise(fs.readFileSync('test/normalise.in.md', 'utf8'))
+    const text = await pandiff.normalise(fs.readFileSync('test/normalise.in.md', 'utf8'))
     expect(text).to.equal(fs.readFileSync('test/normalise.out.md', 'utf8'))
   })
   it('atx', async function () {
-    let text = await pandiff('test/old.md', 'test/new.md', {
+    const text = await pandiff('test/old.md', 'test/new.md', {
       'atx-headers': true,
       files: true,
       'reference-links': true,
@@ -73,7 +73,7 @@ describe('Misc', function () {
   it('threshold', async function () {
     let output = await pandiff('foo bar baz', 'Foo bar baz')
     expect(output).to.equal('{~~foo~>Foo~~} bar baz\n')
-    output = await pandiff('foo bar baz', 'Foo bar baz', {threshold: 0.5})
+    output = await pandiff('foo bar baz', 'Foo bar baz', { threshold: 0.5 })
     expect(output).to.equal(null)
   })
   it('math', async function () {
@@ -83,19 +83,19 @@ describe('Misc', function () {
     expect(output).to.equal('{--$$a b c$$--}\n\n{++$$a d c$$++}\n')
   })
   it('paras', async function () {
-    let output = await pandiff('', 'foo\n\nbar', {to: 'html'})
+    const output = await pandiff('', 'foo\n\nbar', { to: 'html' })
     expect(output).to.equal('<p>\n<ins>\nfoo\n</ins>\n</p>\n<p>\n<ins>\nbar\n</ins>\n</p>\n')
   })
   it('citeproc', async function () {
-    let output = await pandiff('@item1', '@item2', {bibliography: 'test/biblio.bib'})
+    const output = await pandiff('@item1', '@item2', { bibliography: 'test/biblio.bib' })
     expect(output).to.equal('Doe {~~(2005)~>(2006)~~}\n\nDoe, John. {~~2005.~>2006. “Article.”~~} *{~~First Book~>Journal of\nGeneric Studies~~}*{~~. Cambridge: Cambridge University Press.~> 6:\n33–34.~~}\n')
   })
   it('captions', async function () {
-    let output = await pandiff('![foo](x.png)', '![bar](x.png)')
+    const output = await pandiff('![foo](x.png)', '![bar](x.png)')
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n')
   })
   it('tables', async function () {
-    let output = await pandiff('test/old-table.md', 'test/new-table.md', {files: true, to: 'html'})
+    const output = await pandiff('test/old-table.md', 'test/new-table.md', { files: true, to: 'html' })
     expect(output).to.equal(fs.readFileSync('test/diff-table.html', 'utf8'))
   })
 })

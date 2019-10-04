@@ -1,16 +1,27 @@
-const {diffLines} = require('diff')
-const htmldiff = require('node-htmldiff')
-const {JSDOM} = require('jsdom')
-const {pandoc} = require('nodejs-sh')
-const path = require('path')
-const wordwrap = require('wordwrap')
+import { diffLines } from 'diff'
+import htmldiff from 'node-htmldiff'
+import { JSDOM } from 'jsdom'
+import path from 'path'
+import wordwrap from 'wordwrap'
+import sh = require('nodejs-sh')
 
-const forEachR = (a, f) => { for (let i = a.length - 1; i >= 0; i--) f(a[i]) }
-const removeNode = node => node.parentNode.removeChild(node)
-const removeNodes = nodes => forEachR(nodes, removeNode)
+interface ArrayLike<T> {
+  readonly length: number
+  [item: number]: T
+}
 
-function diffu (text1, text2) {
-  let result = []
+function forEachR <T> (a: ArrayLike<T>, f: (e: T) => void) {
+  for (let i = a.length - 1; i >= 0; i--) f(a[i])
+}
+function removeNode (node: Node) {
+  node.parentNode!.removeChild(node)
+}
+function removeNodes <T extends Node> (nodes: ArrayLike<T>) {
+  forEachR(nodes, removeNode)
+}
+
+function diffu (text1: string, text2: string) {
+  const result = [] as string[]
   diffLines(text1, text2).forEach(part => {
     let prefix = ' '
     if (part.removed) prefix = '-'
@@ -22,9 +33,9 @@ function diffu (text1, text2) {
   return result.join('\n')
 }
 
-function postprocess (html) {
-  let dom = new JSDOM(html)
-  let document = dom.window.document
+function postprocess (html: string) {
+  const dom = new JSDOM(html)
+  const document = dom.window.document
 
   // handle math
   forEachR(document.querySelectorAll('span.math.inline'), math => {
@@ -34,19 +45,19 @@ function postprocess (html) {
     math.innerHTML = '\\[' + math.innerHTML + '\\]'
   })
   forEachR(document.querySelectorAll('span.math'), math => {
-    let post = math.cloneNode(true)
+    const post = math.cloneNode(true) as Element
     removeNodes(math.getElementsByTagName('ins'))
     removeNodes(post.getElementsByTagName('del'))
-    math.textContent = math.textContent
-    post.textContent = post.textContent
+    math.textContent = math.textContent; post.textContent = post.textContent // eslint-disable-line
     if (math.textContent === post.textContent) return
     math.innerHTML = '<del>' + math.innerHTML + '</del><ins>' + post.innerHTML + '</ins>'
   })
 
   // strip any pre-existing spans or divs
-  for (let span; (span = document.querySelector('span,div,section'));) {
+  let span: Element | null
+  while ((span = document.querySelector('span,div,section'))) {
     if (['insertion', 'deletion'].includes(span.className)) {
-      let tag = span.className.slice(0, 3)
+      const tag = span.className.slice(0, 3)
       span.outerHTML = `<${tag}>${span.innerHTML}</${tag}>`
     } else {
       span.outerHTML = span.innerHTML
@@ -55,9 +66,9 @@ function postprocess (html) {
 
   // fix figures with modified images
   forEachR(document.getElementsByTagName('figure'), figure => {
-    let imgs = figure.getElementsByTagName('img')
+    const imgs = figure.getElementsByTagName('img')
     if (imgs.length > 1) {
-      let after = figure.cloneNode(true)
+      const after = figure.cloneNode(true) as Element
       removeNodes(figure.getElementsByTagName('ins'))
       removeNodes(after.getElementsByTagName('del'))
       figure.outerHTML = '<div class="del">' + figure.outerHTML + '</div><div class="ins">' + after.outerHTML + '</div>'
@@ -76,12 +87,12 @@ function postprocess (html) {
 
   // line by line diff of code blocks
   forEachR(document.getElementsByTagName('pre'), pre => {
-    let post = pre.cloneNode(true)
+    const post = pre.cloneNode(true) as Element
     removeNodes(pre.getElementsByTagName('ins'))
     removeNodes(post.getElementsByTagName('del'))
     if (pre.textContent === post.textContent) return
     pre.className = 'diff'
-    pre.textContent = diffu(pre.textContent, post.textContent)
+    pre.textContent = diffu(pre.textContent || '', post.textContent || '')
   })
 
   // turn diff tags into spans
@@ -95,8 +106,8 @@ function postprocess (html) {
   // pull diff tags outside inline tags when possible
   const inlineTags = new Set(['a', 'code', 'em', 'q', 'strong', 'sub', 'sup'])
   forEachR(document.getElementsByTagName('span'), span => {
-    let content = span.innerHTML
-    let par = span.parentNode
+    const content = span.innerHTML
+    const par = span.parentNode as Element
     if (par && par.childNodes.length === 1 && inlineTags.has(par.tagName.toLowerCase())) {
       par.innerHTML = content
       par.outerHTML = `<span class="${span.className}">${par.outerHTML}</span>`
@@ -105,7 +116,7 @@ function postprocess (html) {
 
   // merge adjacent diff tags
   forEachR(document.getElementsByTagName('span'), span => {
-    let next = span.nextSibling
+    const next = span.nextSibling as Element
     if (next && span.className === next.className) {
       span.innerHTML += next.innerHTML
       removeNode(next)
@@ -114,7 +125,7 @@ function postprocess (html) {
 
   // split completely rewritten paragraphs
   forEachR(document.getElementsByTagName('p'), para => {
-    let ch = para.childNodes
+    const ch = para.childNodes as NodeListOf<Element>
     if (ch.length === 2 && ch[0].className === 'del' && ch[1].className === 'ins') {
       para.outerHTML = '<p>' + ch[0].outerHTML + '</p><p>' + ch[1].outerHTML + '</p>'
     }
@@ -122,7 +133,7 @@ function postprocess (html) {
 
   // identify substitutions
   forEachR(document.getElementsByTagName('span'), span => {
-    let next = span.nextSibling
+    const next = span.nextSibling as Element
     if (next && span.className === 'del' && next.className === 'ins') {
       span.outerHTML = '<span class="sub">' + span.outerHTML + next.outerHTML + '</span>'
       removeNode(next)
@@ -131,45 +142,46 @@ function postprocess (html) {
   return dom.serialize()
 }
 
-function buildArgs (opts, ...params) {
-  let args = []
+function buildArgs (opts: Record<string, any>, ...params: string[]) {
+  const args = [] as string[]
   for (const param of params) {
     if (param in opts) {
-      if (typeof opts[param] === 'boolean') {
-        if (opts[param] === true) args.push(`--${param}`)
-      } else if (Array.isArray(opts[param])) {
-        for (const opt of opts[param]) {
-          args.push(`--${param}=${opt}`)
+      const opt = opts[param]
+      if (typeof opt === 'boolean') {
+        if (opt === true) args.push(`--${param}`)
+      } else if (Array.isArray(opt)) {
+        for (const val of opt) {
+          args.push(`--${param}=${val}`)
         }
       } else {
-        args.push(`--${param}=${opts[param]}`)
+        args.push(`--${param}=${opt}`)
       }
     }
   }
   return args
 }
 
-async function convert (source, opts = {}) {
-  let args = buildArgs(opts, 'bibliography', 'csl', 'extract-media', 'filter', 'from', 'lua-filter', 'mathjax', 'mathml', 'reference-doc', 'resource-path')
+async function convert (source: string, opts: pandiff.Options = {}) {
+  const args = buildArgs(opts, 'bibliography', 'csl', 'extract-media', 'filter', 'from', 'lua-filter', 'mathjax', 'mathml', 'reference-doc', 'resource-path')
   args.push('--html-q-tags', '--mathjax')
   let html
   if (opts.files) {
-    html = await pandoc(...args, source).toString()
+    html = await sh.pandoc(...args, source).toString()
   } else {
-    html = await pandoc(...args).end(source).toString()
+    html = await sh.pandoc(...args).end(source).toString()
   }
   html = html.replace(/\\[()[\]]/g, '')
-  if ('extract-media' in opts) html = await pandoc(...args, '--from=html').end(html).toString()
+  if ('extract-media' in opts) html = await sh.pandoc(...args, '--from=html').end(html).toString()
   return html
 }
 
-async function pandiff (source1, source2, opts = {}) {
-  let html1 = await convert(source1, opts)
-  let html2 = await convert(source2, opts)
-  let html = htmldiff(html1, html2)
+async function pandiff (source1: string, source2: string, opts: pandiff.Options = {}) {
+  const html1 = await convert(source1, opts)
+  const html2 = await convert(source2, opts)
+  const html = htmldiff(html1, html2)
 
-  let unmodified = html.replace(/<del.*?del>/g, '').replace(/<ins.*?ins>/g, '')
-  let similarity = unmodified.length / html.length
+  const unmodified = html.replace(/<del.*?del>/g, '').replace(/<ins.*?ins>/g, '')
+  const similarity = unmodified.length / html.length
   if (opts.threshold && similarity < opts.threshold) {
     console.error(Math.round(100 - 100 * similarity) + '% of the content has changed')
     return null
@@ -210,15 +222,15 @@ const regex = {
   }
 }
 
-async function render (html, opts = {}) {
+async function render (html: string, opts: pandiff.Options = {}) {
   html = postprocess(html)
 
-  let args = buildArgs(opts, 'atx-headers', 'reference-links')
+  const args = buildArgs(opts, 'atx-headers', 'reference-links')
   args.push('--wrap=none')
   if (opts.output || opts.to) args.push('--atx-headers')
 
-  let output = await pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown).end(html).toString()
-  output = await pandoc(...args, '-t', markdown).end(output).toString()
+  let output = await sh.pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown).end(html).toString()
+  output = await sh.pandoc(...args, '-t', markdown).end(output).toString()
   output = output
     .replace(regex.span.sub, '{~~$1~>$2~~}')
     .replace(regex.span.del, '{--$1--}')
@@ -226,11 +238,11 @@ async function render (html, opts = {}) {
     .replace(regex.div.del, '{--$1--}')
     .replace(regex.div.ins, '{++$1++}')
 
-  let {wrap = 72} = opts
-  let lines = []
+  const { wrap = 72 } = opts
+  const lines = [] as string[]
   let pre = false
   for (const line of output.split('\n')) {
-    let lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0
+    const lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0
     if (line.startsWith('```')) pre = !pre
     if (pre || line.startsWith('  [')) {
       lines.push(line)
@@ -244,30 +256,30 @@ async function render (html, opts = {}) {
       lines.push(line)
     }
   }
-  let text = lines.join('\n')
+  const text = lines.join('\n')
   return postrender(text, opts)
 }
 
-const criticHTML = text => text
+const criticHTML = (text: string) => text
   .replace(regex.critic.del, '<del>$1</del>')
   .replace(regex.critic.ins, '<ins>$1</ins>')
   .replace(regex.critic.sub, '<del>$1</del><ins>$2</ins>')
 
-const criticLaTeX = text => '\\useunder{\\uline}{\\ulined}{}\n' + text
+const criticLaTeX = (text: string) => '\\useunder{\\uline}{\\ulined}{}\n' + text
   .replace(regex.critic.del, '<span>\\color{Maroon}~~<span>$1</span>~~</span>')
   .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
   .replace(regex.critic.sub, '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>')
 
-const criticTrackChanges = text => text
+const criticTrackChanges = (text: string) => text
   .replace(regex.critic.del, '<span class="deletion">$1</span>')
   .replace(regex.critic.ins, '<span class="insertion">$1</span>')
   .replace(regex.critic.sub, '<span class="deletion">$1</span><span class="insertion">$2</span>')
 
-const criticReject = text => text
+const criticReject = (text: string) => text
   .replace(regex.critic.del, '$1')
   .replace(regex.critic.ins, '')
   .replace(regex.critic.sub, '$1')
-const criticAccept = text => text
+const criticAccept = (text: string) => text
   .replace(regex.critic.del, '')
   .replace(regex.critic.ins, '$1')
   .replace(regex.critic.sub, '$2')
@@ -280,12 +292,12 @@ const pandocOptionsHTML = [
   '--self-contained'
 ]
 
-async function postrender (text, opts = {}) {
+async function postrender (text: string, opts: pandiff.Options = {}) {
   if (!opts.output && !opts.to) return text
 
   if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate'
   let args = buildArgs(opts, 'highlight-style', 'output', 'pdf-engine', 'resource-path', 'standalone', 'to')
-  let outputExt = opts.output ? path.extname(opts.output) : null
+  const outputExt = opts.output ? path.extname(opts.output) : null
   if (outputExt === '.pdf') opts.standalone = true
 
   if (opts.to === 'latex' || outputExt === '.tex' || outputExt === '.pdf') {
@@ -295,22 +307,52 @@ async function postrender (text, opts = {}) {
     text = criticTrackChanges(text)
   } else if (opts.to === 'html' || outputExt === '.html') {
     text = criticHTML(text)
-    let paras = text.split('\n\n').map(p =>
+    const paras = text.split('\n\n').map(p =>
       (p.startsWith('<ins>') || p.startsWith('<del>')) ? '<p>' + p + '</p>' : p)
     text = paras.join('\n\n')
     if (opts.standalone) args = args.concat(pandocOptionsHTML)
   }
 
   if (opts.output) {
-    await pandoc(...args).end(text)
+    await sh.pandoc(...args).end(text)
     return null
   } else {
-    return pandoc(...args).end(text).toString()
+    return sh.pandoc(...args).end(text).toString()
   }
 }
 
-module.exports = pandiff
-module.exports.trackChanges = (file, opts = {}) =>
-  pandoc(file, '--track-changes=all').toString().then(html => render(html, opts))
-module.exports.normalise = (text, opts = {}) =>
-  pandiff(criticReject(text), criticAccept(text), opts)
+export = pandiff
+namespace pandiff { // eslint-disable-line
+  export type File = string
+  export type Format = string
+  export type Path = string
+  export interface Options {
+    'atx-headers'?: boolean
+    bibliography?: File[]
+    columns?: number
+    'extract-media'?: Path
+    filter?: string[]
+    from?: Format
+    help?: boolean
+    'highlight-style'?: string
+    'lua-filter'?: File[]
+    output?: File
+    'pdf-engine'?: string
+    'reference-links'?: boolean
+    'resource-path'?: Path
+    standalone?: boolean
+    threshold?: number
+    to?: Format
+    version?: boolean
+    wrap?: number
+    files?: File[]
+  }
+  /* eslint-disable no-inner-declarations */
+  export async function trackChanges (file: string, opts: Options = {}) {
+    const html = await sh.pandoc(file, '--track-changes=all').toString()
+    return render(html, opts)
+  }
+  export function normalise (text: string, opts: Options = {}) {
+    return pandiff(criticReject(text), criticAccept(text), opts)
+  }
+}
