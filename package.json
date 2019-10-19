@@ -38,7 +38,7 @@
     "github-markdown-css": "^2.10.0",
     "jsdom": "^11.12.0",
     "node-htmldiff": "^0.9.3",
-    "nodejs-sh": "^0.1.0",
+    "nodejs-sh": "^0.2.0",
     "wordwrap": "^1.0.0"
   },
   "standard": {

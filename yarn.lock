@@ -521,11 +521,6 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-duplexer@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
-  integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
-
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -1473,12 +1468,11 @@ node-htmldiff@^0.9.3:
   resolved "https://registry.yarnpkg.com/node-htmldiff/-/node-htmldiff-0.9.3.tgz#020704e381597e5e449a4708996edf23eebb7fcc"
   integrity sha1-AgcE44FZfl5EmkcImW7fI+67f8w=
 
-nodejs-sh@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/nodejs-sh/-/nodejs-sh-0.1.0.tgz#45e6b39395fd964c549d65bba70c3fec03c3043b"
-  integrity sha512-36Co3SPJUfCHYRqOPfzMTQOXSSLt8R7bYNvI2K9XbOsQ201vocxRsrz+tOU/We8XCBoD8sbS8jj1DdyIrmFHwQ==
+nodejs-sh@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nodejs-sh/-/nodejs-sh-0.2.0.tgz#499c88bc51579c59f20fec96af1ffa1b2f108f30"
+  integrity sha512-UpyMwRnL/nws7JsCY7p/k3xcX2hwBj6zrqvuxS6sz1GKiNcIh3EhvoxZaX+27wBhHb7o/dqLB4YibME94JbS5g==
   dependencies:
-    duplexer "^0.1.1"
     raw-body "^2.3.2"
 
 normalize-package-data@^2.3.2:

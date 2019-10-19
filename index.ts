@@ -3,7 +3,7 @@ import htmldiff from 'node-htmldiff'
 import { JSDOM } from 'jsdom'
 import path from 'path'
 import wordwrap from 'wordwrap'
-import sh = require('nodejs-sh')
+import * as sh from 'nodejs-sh'
 
 interface ArrayLike<T> {
   readonly length: number
