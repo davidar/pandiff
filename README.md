@@ -63,6 +63,7 @@ pandiff --help
 Usage: pandiff [OPTIONS] FILE1 FILE2
       --atx-headers
       --bibliography=FILE
+      --csl=FILE
       --columns=NUMBER
       --extract-media=PATH
   -F, --filter=STRING
@@ -70,8 +71,11 @@ Usage: pandiff [OPTIONS] FILE1 FILE2
   -h, --help
       --highlight-style=STRING
       --lua-filter=FILE
+      --mathjax=BOOL
+      --mathml=BOOL
   -o, --output=FILE
       --pdf-engine=STRING
+      --reference-dic=FILE
       --reference-links
       --resource-path=PATH
   -s, --standalone
