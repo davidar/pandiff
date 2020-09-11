@@ -1,5 +1,7 @@
 # PanDiff
 
+[![Build Status](https://travis-ci.org/davidar/pandiff.svg?branch=master)](https://travis-ci.org/davidar/pandiff)
+
 ## Features
 
 - Prose diffs for [any document format supported by Pandoc](https://pandoc.org/MANUAL.html)
