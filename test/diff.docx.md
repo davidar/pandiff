@@ -1,9 +1,9 @@
 {~~Old~>New~~} Title
 ====================
 
-{--![image](media/rId21.png)--}
+{--![image](media/rId20.png)--}
 
-{++![image](media/rId22.png)++}
+{++![image](media/rId21.png)++}
 
 1.  Lorem ipsum dolor {++sit++} amet
 2.  {++++}
