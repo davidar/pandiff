@@ -4,11 +4,10 @@
   "description": "Prose diffs for any document format supported by Pandoc",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "bin": "cli.js",
+  "bin": "lib/cli.js",
   "files": [
     "assets",
-    "lib",
-    "cli.js"
+    "lib"
   ],
   "scripts": {
     "test": "mocha",

@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-const commandLineArgs = require('command-line-args');
-const fs = require('fs');
-const pandiff = require('.');
-const {version} = require('./package.json');
+import commandLineArgs from 'command-line-args';
+import fs from 'fs';
+import pandiff from '.';
 
-async function main(opts) {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const {version} = require('../package.json');
+
+async function main(opts: commandLineArgs.CommandLineOptions) {
   const files = opts.files;
   if (opts.wrap === 'none') {
     opts.wrap = 0;
@@ -16,26 +18,26 @@ async function main(opts) {
   if (opts.version) {
     console.error('pandiff', version);
   } else if (files && files.length === 1 && files[0].endsWith('.docx')) {
-    text = await pandiff.trackChanges(files[0], opts);
+    text = await pandiff.trackChanges(files[0], opts as pandiff.Options);
   } else if (files && files.length === 1 && files[0].endsWith('.md')) {
     text = fs.readFileSync(files[0], 'utf8');
     delete opts.files;
-    text = await pandiff.normalise(text, opts);
+    text = await pandiff.normalise(text, opts as pandiff.Options);
   } else if (files && files.length === 2) {
     const [file1, file2] = files;
     opts.files = true;
-    text = await pandiff(file1, file2, opts);
+    text = await pandiff(file1, file2, opts as pandiff.Options);
   } else {
     help();
   }
   if (text) process.stdout.write(text);
 }
 
-const File = s => s;
-const Format = s => s;
-const Path = s => s;
+const File = (s: string) => s;
+const Format = (s: string) => s;
+const Path = (s: string) => s;
 
-const optionDefinitions = [
+const optionDefinitions: commandLineArgs.OptionDefinition[] = [
   {name: 'atx-headers', type: Boolean},
   {name: 'bibliography', type: File, multiple: true},
   {name: 'columns', type: Number},

@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "lib",
     "lib": ["es2018", "dom"],
     "esModuleInterop": true
