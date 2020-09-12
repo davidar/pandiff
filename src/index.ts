@@ -159,6 +159,7 @@ function postprocess(html: string) {
   return dom.serialize();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildArgs(opts: Record<string, any>, ...params: string[]) {
   const args = [] as string[];
   for (const param of params) {
@@ -215,7 +216,7 @@ async function pandiff(
   source1: string,
   source2: string,
   opts: pandiff.Options = {}
-) {
+): Promise<string | null> {
   const html1 = await convert(source1, opts);
   const html2 = await convert(source2, opts);
   const html = htmldiff(html1, html2);
@@ -353,7 +354,7 @@ const pandocOptionsHTML = [
   '--css',
   require.resolve('github-markdown-css'),
   '--css',
-  path.join(__dirname, 'pandiff.css'),
+  require.resolve('../assets/pandiff.css'),
   '--variable',
   'include-before=<article class="markdown-body">',
   '--variable',
@@ -431,11 +432,17 @@ namespace pandiff { // eslint-disable-line
     files?: File[];
   }
   /* eslint-disable no-inner-declarations */
-  export async function trackChanges(file: string, opts: Options = {}) {
+  export async function trackChanges(
+    file: string,
+    opts: Options = {}
+  ): Promise<string | null> {
     const html = await sh.pandoc(file, '--track-changes=all').toString();
     return render(html, opts);
   }
-  export function normalise(text: string, opts: Options = {}) {
+  export function normalise(
+    text: string,
+    opts: Options = {}
+  ): Promise<string | null> {
     return pandiff(criticReject(text), criticAccept(text), opts);
   }
 }
