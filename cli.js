@@ -2,10 +2,10 @@
 const commandLineArgs = require('command-line-args')
 const fs = require('fs')
 const pandiff = require('.')
-const pkg = require('./package.json')
+const { version } = require('./package.json')
 
 async function main (opts) {
-  let files = opts.files
+  const files = opts.files
   if (opts.wrap === 'none') {
     opts.wrap = 0
   } else if (opts.columns) {
@@ -14,7 +14,7 @@ async function main (opts) {
 
   let text = null
   if (opts.version) {
-    console.error('pandiff', pkg.version)
+    console.error('pandiff', version)
   } else if (files && files.length === 1 && files[0].endsWith('.docx')) {
     text = await pandiff.trackChanges(files[0], opts)
   } else if (files && files.length === 1 && files[0].endsWith('.md')) {
@@ -22,7 +22,7 @@ async function main (opts) {
     delete opts.files
     text = await pandiff.normalise(text, opts)
   } else if (files && files.length === 2) {
-    let [file1, file2] = files
+    const [file1, file2] = files
     opts.files = true
     text = await pandiff(file1, file2, opts)
   } else {
@@ -36,28 +36,28 @@ const Format = s => s
 const Path = s => s
 
 const optionDefinitions = [
-  {name: 'atx-headers', type: Boolean},
-  {name: 'bibliography', type: File, multiple: true},
-  {name: 'columns', type: Number},
-  {name: 'csl', type: File, multiple: true},
-  {name: 'extract-media', type: Path},
-  {name: 'filter', alias: 'F', type: String, multiple: true},
-  {name: 'from', alias: 'f', type: Format},
-  {name: 'help', alias: 'h', type: Boolean},
-  {name: 'highlight-style', type: String},
-  {name: 'lua-filter', type: File, multiple: true},
-  {name: 'mathjax', type: Boolean},
-  {name: 'mathml', type: Boolean},
-  {name: 'output', alias: 'o', type: File},
-  {name: 'pdf-engine', type: String},
-  {name: 'reference-doc', type: File, multiple: true},
-  {name: 'reference-links', type: Boolean},
-  {name: 'resource-path', type: Path},
-  {name: 'standalone', alias: 's', type: Boolean},
-  {name: 'to', alias: 't', type: Format},
-  {name: 'version', alias: 'v', type: Boolean},
-  {name: 'wrap', type: String},
-  {name: 'files', multiple: true, defaultOption: true}
+  { name: 'atx-headers', type: Boolean },
+  { name: 'bibliography', type: File, multiple: true },
+  { name: 'columns', type: Number },
+  { name: 'csl', type: File, multiple: true },
+  { name: 'extract-media', type: Path },
+  { name: 'filter', alias: 'F', type: String, multiple: true },
+  { name: 'from', alias: 'f', type: Format },
+  { name: 'help', alias: 'h', type: Boolean },
+  { name: 'highlight-style', type: String },
+  { name: 'lua-filter', type: File, multiple: true },
+  { name: 'mathjax', type: Boolean },
+  { name: 'mathml', type: Boolean },
+  { name: 'output', alias: 'o', type: File },
+  { name: 'pdf-engine', type: String },
+  { name: 'reference-doc', type: File, multiple: true },
+  { name: 'reference-links', type: Boolean },
+  { name: 'resource-path', type: Path },
+  { name: 'standalone', alias: 's', type: Boolean },
+  { name: 'to', alias: 't', type: Format },
+  { name: 'version', alias: 'v', type: Boolean },
+  { name: 'wrap', type: String },
+  { name: 'files', multiple: true, defaultOption: true }
 ]
 
 function help () {
