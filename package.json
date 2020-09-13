@@ -10,7 +10,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "mocha",
+    "test": "mocha lib/**/*.spec.js",
     "check": "gts check",
     "compile": "tsc",
     "prepare": "yarn run compile",
@@ -26,9 +26,11 @@
     "url": "git+https://github.com/davidar/pandiff.git"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.12",
     "@types/command-line-args": "^5.0.0",
     "@types/diff": "^4.0.2",
     "@types/jsdom": "^16.2.4",
+    "@types/mocha": "^8.0.3",
     "@types/node": "^13.11.1",
     "@types/wordwrap": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.0",

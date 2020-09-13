@@ -6,14 +6,7 @@ import pandiff from '.';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {version} = require('../package.json');
 
-async function main(opts: commandLineArgs.CommandLineOptions) {
-  const files = opts.files;
-  if (opts.wrap === 'none') {
-    opts.wrap = 0;
-  } else if (opts.columns) {
-    opts.wrap = opts.columns;
-  }
-
+async function main({files, ...opts}: commandLineArgs.CommandLineOptions) {
   let text = null;
   if (opts.version) {
     console.error('pandiff', version);
@@ -21,12 +14,10 @@ async function main(opts: commandLineArgs.CommandLineOptions) {
     text = await pandiff.trackChanges(files[0], opts as pandiff.Options);
   } else if (files && files.length === 1 && files[0].endsWith('.md')) {
     text = fs.readFileSync(files[0], 'utf8');
-    delete opts.files;
     text = await pandiff.normalise(text, opts as pandiff.Options);
   } else if (files && files.length === 2) {
     const [file1, file2] = files;
-    opts.files = true;
-    text = await pandiff(file1, file2, opts as pandiff.Options);
+    text = await pandiff(file1, file2, {...opts, files: true});
   } else {
     help();
   }

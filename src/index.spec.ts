@@ -1,19 +1,19 @@
 /* eslint-env mocha */
-const {expect} = require('chai');
-const fs = require('fs');
+import {expect} from 'chai';
+import fs from 'fs';
+import pandiff from '.';
 
-const pandiff = require('..');
-
-const diff = fs.readFileSync('test/diff.md', 'utf8');
-const test = ext =>
-  async function () {
+function test(ext: string) {
+  return async function () {
     const output = await pandiff('test/old.' + ext, 'test/new.' + ext, {
       'extract-media': '/tmp',
       files: true,
       'resource-path': 'test',
     });
+    const diff = fs.readFileSync('test/diff.md', 'utf8');
     expect(output).to.equal(diff);
   };
+}
 
 describe('Input formats', () => {
   it('EPUB', test('epub'));
@@ -79,7 +79,7 @@ describe('Misc', () => {
       'atx-headers': true,
       files: true,
       'reference-links': true,
-      wrap: 0,
+      wrap: 'none',
     });
     expect(text).to.equal(fs.readFileSync('test/diff.atx.md', 'utf8'));
   });
@@ -109,7 +109,7 @@ describe('Misc', () => {
   });
   it('citeproc', async () => {
     const output = await pandiff('@item1', '@item2', {
-      bibliography: 'test/biblio.bib',
+      bibliography: ['test/biblio.bib'],
     });
     expect(output).to.equal(
       'Doe {~~(2005)~>(2006)~~}\n\nDoe, John. {~~2005.~>2006. “Article.”~~} *{~~First Book~>Journal of\nGeneric Studies~~}*{~~. Cambridge: Cambridge University Press.~> 6:\n33–34.~~}\n'

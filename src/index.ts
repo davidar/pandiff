@@ -289,7 +289,6 @@ async function render(html: string, opts: pandiff.Options = {}) {
     .replace(regex.div.del, '{--$1--}')
     .replace(regex.div.ins, '{++$1++}');
 
-  const {wrap = 72} = opts;
   const lines = [] as string[];
   let pre = false;
   for (const line of output.split('\n')) {
@@ -299,8 +298,8 @@ async function render(html: string, opts: pandiff.Options = {}) {
       lines.push(line);
     } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
       lines.push(line.slice(0, lastLineLen));
-    } else if (wrap) {
-      for (const wrapped of wordwrap(wrap)(line).split('\n')) {
+    } else if (opts.wrap !== 'none') {
+      for (const wrapped of wordwrap(opts.columns || 72)(line).split('\n')) {
         lines.push(wrapped);
       }
     } else {
@@ -428,8 +427,8 @@ namespace pandiff { // eslint-disable-line
     threshold?: number;
     to?: Format;
     version?: boolean;
-    wrap?: number;
-    files?: File[];
+    wrap?: 'auto' | 'none' | 'preserve';
+    files?: boolean;
   }
   /* eslint-disable no-inner-declarations */
   export async function trackChanges(
