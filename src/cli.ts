@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* -*- typescript -*- */
+
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import pandiff from '.';
