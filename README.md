@@ -1,6 +1,7 @@
 # PanDiff
 
 [![Build Status](https://travis-ci.org/davidar/pandiff.svg?branch=master)](https://travis-ci.org/davidar/pandiff)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/davidar/pandiff)
 
 ## Features
 
