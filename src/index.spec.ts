@@ -74,15 +74,6 @@ describe('Misc', () => {
     );
     expect(text).to.equal(fs.readFileSync('test/normalise.out.md', 'utf8'));
   });
-  it('atx', async () => {
-    const text = await pandiff('test/old.md', 'test/new.md', {
-      'atx-headers': true,
-      files: true,
-      'reference-links': true,
-      wrap: 'none',
-    });
-    expect(text).to.equal(fs.readFileSync('test/diff.atx.md', 'utf8'));
-  });
   it('quotes', async () => {
     let output = await pandiff('said “foo bar”', 'said “Foo bar”');
     expect(output).to.equal('said “{~~foo~>Foo~~} bar”\n');

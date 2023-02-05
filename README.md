@@ -64,7 +64,6 @@ pandiff --help
 
 ```
 Usage: pandiff [OPTIONS] FILE1 FILE2
-      --atx-headers
       --bibliography=FILE
       --csl=FILE
       --columns=NUMBER
