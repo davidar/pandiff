@@ -269,10 +269,8 @@ const regex = {
 
 async function render(html: string, opts: pandiff.Options = {}) {
   html = postprocess(html);
-
-  const args = buildArgs(opts, 'atx-headers', 'reference-links');
+  const args = buildArgs(opts, 'reference-links');
   args.push('--wrap=none');
-  if (opts.output || opts.to) args.push('--atx-headers');
 
   let output = await sh
     .pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown)
@@ -358,7 +356,8 @@ const pandocOptionsHTML = [
   'include-before=<article class="markdown-body">',
   '--variable',
   'include-after=</article>',
-  '--self-contained',
+  '--embed-resources',
+  '--standalone'
 ];
 
 async function postrender(text: string, opts: pandiff.Options = {}) {
@@ -410,7 +409,6 @@ namespace pandiff { // eslint-disable-line
   export type Format = string;
   export type Path = string;
   export interface Options {
-    'atx-headers'?: boolean;
     bibliography?: File[];
     columns?: number;
     'extract-media'?: Path;

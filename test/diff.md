@@ -1,5 +1,4 @@
-{~~Old~>New~~} Title
-====================
+# {~~Old~>New~~} Title
 
 {--![image](/tmp/875291f0dd9b00396bfaafc8daf1afee27a0354b.png)--}
 

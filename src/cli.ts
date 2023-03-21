@@ -31,7 +31,6 @@ const Format = (s: string) => s;
 const Path = (s: string) => s;
 
 const optionDefinitions: commandLineArgs.OptionDefinition[] = [
-  {name: 'atx-headers', type: Boolean},
   {name: 'bibliography', type: File, multiple: true},
   {name: 'columns', type: Number},
   {name: 'csl', type: File, multiple: true},
