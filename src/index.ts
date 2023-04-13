@@ -357,7 +357,7 @@ const pandocOptionsHTML = [
   '--variable',
   'include-after=</article>',
   '--embed-resources',
-  '--standalone'
+  '--standalone',
 ];
 
 async function postrender(text: string, opts: pandiff.Options = {}) {

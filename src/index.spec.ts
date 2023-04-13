@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import fs from 'fs';
 import pandiff from '.';
 
+/*
 function test(ext: string) {
   return async function () {
     const output = await pandiff('test/old.' + ext, 'test/new.' + ext, {
@@ -15,7 +16,6 @@ function test(ext: string) {
   };
 }
 
-/*
 describe('Input formats', () => {
   it('EPUB', test('epub'));
   it('LaTeX', test('tex'));
