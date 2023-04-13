@@ -246,6 +246,7 @@ const markdown = [
   '-link_attributes',
   '-multiline_tables',
   '-pipe_tables',
+  '-raw_attribute',
   '-simple_tables',
   '-smart',
 ].join('');
