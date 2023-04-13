@@ -209,6 +209,7 @@ async function convert(source: string, opts: pandiff.Options = {}) {
       .pandoc(...args, '--from=html')
       .end(html)
       .toString();
+  html = new JSDOM(html).serialize();
   return html;
 }
 
