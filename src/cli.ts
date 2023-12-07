@@ -44,6 +44,7 @@ const optionDefinitions: commandLineArgs.OptionDefinition[] = [
   {name: 'mathml', type: Boolean},
   {name: 'output', alias: 'o', type: File},
   {name: 'pdf-engine', type: String},
+  {name: 'metadata-file', type: File, multiple: true},
   {name: 'reference-doc', type: File, multiple: true},
   {name: 'reference-links', type: Boolean},
   {name: 'resource-path', type: Path},
