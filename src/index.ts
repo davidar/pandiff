@@ -190,7 +190,6 @@ async function convert(source: string, opts: pandiff.Options = {}) {
     'lua-filter',
     'mathjax',
     'mathml',
-    'reference-doc',
     'resource-path'
   );
   args.push('--html-q-tags', '--mathjax');
@@ -371,6 +370,7 @@ async function postrender(text: string, opts: pandiff.Options = {}) {
     'highlight-style',
     'output',
     'pdf-engine',
+    'reference-doc',
     'resource-path',
     'standalone',
     'to'
@@ -422,6 +422,7 @@ namespace pandiff { // eslint-disable-line
     output?: File;
     'pdf-engine'?: string;
     'reference-links'?: boolean;
+    'reference-doc'?: File,
     'resource-path'?: Path;
     standalone?: boolean;
     threshold?: number;
