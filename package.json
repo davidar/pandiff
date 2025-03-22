@@ -5,19 +5,22 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": "lib/cli.js",
+  "engines": {
+    "node": ">=8.3.0"
+  },
   "files": [
     "assets",
     "lib"
   ],
   "scripts": {
     "test": "mocha lib/**/*.spec.js",
-    "check": "gts check",
     "compile": "tsc",
     "prepare": "yarn run compile",
     "pretest": "yarn run compile",
-    "posttest": "yarn run check",
+    "posttest": "yarn run lint",
     "clean": "gts clean",
-    "fix": "gts fix"
+    "fix": "gts fix",
+    "lint": "gts lint"
   },
   "author": "David A Roberts",
   "license": "MIT",
@@ -26,30 +29,34 @@
     "url": "git+https://github.com/davidar/pandiff.git"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.4",
+    "@eslint/eslintrc": "^2.1.4",
+    "@eslint/js": "^8.56.0",
+    "@types/chai": "^5.2.0",
     "@types/command-line-args": "^5.2.0",
-    "@types/diff": "^5.0.2",
+    "@types/diff": "^7.0.1",
     "@types/jsdom": "^21.1.0",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.5",
+    "@types/node": "^20.11.19",
     "@types/wordwrap": "^1.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
-    "chai": "^4.3.7",
-    "eslint": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "@typescript-eslint/typescript-estree": "^7.0.1",
+    "chai": "^5.2.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "gts": "^3.1.1",
-    "mocha": "^10.2.0",
-    "prettier": "^2.8.6",
-    "standard": "^17.0.0",
-    "typescript": "^5.0.2"
+    "eslint-plugin-prettier": "^5.1.3",
+    "gts": "^5.2.0",
+    "mocha": "^11.1.0",
+    "prettier": "^3.2.5",
+    "standard": "^17.1.0",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "command-line-args": "^5.2.1",
-    "diff": "^5.1.0",
+    "command-line-args": "^6.0.1",
+    "diff": "^7.0.0",
     "github-markdown-css": "^5.2.0",
-    "jsdom": "^21.1.1",
+    "jsdom": "^26.0.0",
     "node-htmldiff": "^0.9.4",
     "nodejs-sh": "^0.2.0",
     "wordwrap": "^1.0.0"

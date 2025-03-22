@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2022", "dom"],
     "esModuleInterop": true
   },
   "exclude": [
