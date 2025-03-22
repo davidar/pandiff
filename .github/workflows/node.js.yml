@@ -28,4 +28,5 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - uses: nikeee/setup-pandoc@v1
+    - run: sudo apt-get install texlive-latex-extra texlive-luatex
     - run: npm test

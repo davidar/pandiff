@@ -76,6 +76,17 @@ describe('Output formats', () => {
     const expected = fs.readFileSync('test/diff.docx.md', 'utf8');
     expectWithFallback(text, expected, 'test/diff.docx.md');
   });
+  it('PDF', async function () {
+    this.timeout(10000); // Increase timeout for PDF generation
+    process.chdir('test');
+    await pandiff('old.md', 'new.md', {
+      files: true,
+      output: 'diff.pdf',
+      'pdf-engine': 'lualatex',
+    });
+    expect(fs.existsSync('diff.pdf')).to.be.true;
+    process.chdir('..');
+  });
 });
 
 describe('Track Changes', () => {
