@@ -54,6 +54,13 @@ function postprocess(html: string) {
       '<del>' + math.innerHTML + '</del><ins>' + post.innerHTML + '</ins>';
   });
 
+  // strip style attributes from images
+  forEachR(document.getElementsByTagName('img'), img => {
+    if (img.hasAttribute('style')) {
+      img.removeAttribute('style');
+    }
+  });
+
   // strip any pre-existing spans or divs
   let span: Element | null;
   while ((span = document.querySelector('span,div,section'))) {
@@ -69,15 +76,50 @@ function postprocess(html: string) {
   forEachR(document.getElementsByTagName('figure'), figure => {
     const imgs = figure.getElementsByTagName('img');
     if (imgs.length > 1) {
-      const after = figure.cloneNode(true) as Element;
-      removeNodes(figure.getElementsByTagName('ins'));
-      removeNodes(after.getElementsByTagName('del'));
-      figure.outerHTML =
-        '<div class="del">' +
-        figure.outerHTML +
-        '</div><div class="ins">' +
-        after.outerHTML +
-        '</div>';
+      // Find the deleted and inserted images
+      const deletedImgs = figure.querySelectorAll('del img, img:not(ins img)');
+      const insertedImgs = figure.querySelectorAll('ins img');
+
+      // Get the figure caption text
+      const figcaption = figure.querySelector('figcaption');
+      const captionText = figcaption
+        ? figcaption.textContent || 'image'
+        : 'image';
+
+      // Create replacement elements
+      const container = document.createElement('div');
+
+      // Add deleted images with del tags
+      if (deletedImgs.length > 0) {
+        const img = deletedImgs[0] as HTMLImageElement;
+        const delEl = document.createElement('del');
+        const imgEl = document.createElement('img');
+        imgEl.src = img.src;
+        imgEl.alt = captionText;
+        delEl.appendChild(imgEl);
+        container.appendChild(delEl);
+
+        // Add a proper paragraph break if both deleted and inserted images exist
+        if (insertedImgs.length > 0) {
+          // Using a proper block element like p to create a new paragraph in markdown
+          const breakEl = document.createElement('p');
+          container.appendChild(breakEl);
+        }
+      }
+
+      // Add inserted images with ins tags
+      if (insertedImgs.length > 0) {
+        const img = insertedImgs[0] as HTMLImageElement;
+        const insEl = document.createElement('ins');
+        const imgEl = document.createElement('img');
+        imgEl.src = img.src;
+        imgEl.alt = captionText;
+        insEl.appendChild(imgEl);
+        container.appendChild(insEl);
+      }
+
+      // Replace the figure with our container's contents
+      figure.outerHTML = container.innerHTML;
     }
   });
 

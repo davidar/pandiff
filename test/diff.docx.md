@@ -1,12 +1,12 @@
-{~~Old~>New~~} Title
-====================
+# {~~Old~>New~~} Title
 
 {--![image](media/rId20.png)--}
 
-{++![image](media/rId21.png)++}
+{++![image](media/rId23.png)++}
 
 1.  Lorem ipsum dolor {++sit++} amet
-2.  {++++}
+2.  {++[consectetur adipiscing
+elit](https://en.wikipedia.org/wiki/Lorem_ipsum)++}
 3.  Lorem {--ipsum--} dolor sit amet
 
 I really love *italic {~~fonts~>font-styles~~}* {~~here.~>there.~~}

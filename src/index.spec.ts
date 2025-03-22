@@ -3,7 +3,27 @@ import {expect} from 'chai';
 import fs from 'fs';
 import pandiff from '.';
 
-/*
+// Helper function to write actual output to file when tests fail
+function expectWithFallback(
+  actual: string | null,
+  expected: string,
+  filePath: string
+) {
+  try {
+    expect(actual).to.equal(expected);
+  } catch (error: unknown) {
+    if (actual === null) {
+      throw error; // Don't write null to file
+    }
+    const actualFilePath = filePath + '.actual';
+    fs.writeFileSync(actualFilePath, actual);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `${errorMessage}\nActual output written to: ${actualFilePath}`
+    );
+  }
+}
+
 function test(ext: string) {
   return async function () {
     const output = await pandiff('test/old.' + ext, 'test/new.' + ext, {
@@ -12,7 +32,7 @@ function test(ext: string) {
       'resource-path': 'test',
     });
     const diff = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output).to.equal(diff);
+    expectWithFallback(output, diff, 'test/diff.md');
   };
 }
 
@@ -34,7 +54,8 @@ describe('Output formats', () => {
       standalone: true,
       to: 'html',
     });
-    expect(text).to.equal(fs.readFileSync('test/diff.html', 'utf8'));
+    const expected = fs.readFileSync('test/diff.html', 'utf8');
+    expectWithFallback(text, expected, 'test/diff.html');
   });
   it('LaTeX', async () => {
     const text = await pandiff('test/old.md', 'test/new.md', {
@@ -42,7 +63,8 @@ describe('Output formats', () => {
       standalone: true,
       to: 'latex',
     });
-    expect(text).to.equal(fs.readFileSync('test/diff.tex', 'utf8'));
+    const expected = fs.readFileSync('test/diff.tex', 'utf8');
+    expectWithFallback(text, expected, 'test/diff.tex');
   });
   it('Word', async () => {
     await pandiff('test/old.md', 'test/new.md', {
@@ -51,10 +73,10 @@ describe('Output formats', () => {
       'resource-path': 'test',
     });
     const text = await pandiff.trackChanges('/tmp/diff.docx');
-    expect(text).to.equal(fs.readFileSync('test/diff.docx.md', 'utf8'));
+    const expected = fs.readFileSync('test/diff.docx.md', 'utf8');
+    expectWithFallback(text, expected, 'test/diff.docx.md');
   });
 });
-*/
 
 describe('Track Changes', () => {
   ['deletion', 'insertion', 'move'].forEach(task =>
@@ -62,9 +84,8 @@ describe('Track Changes', () => {
       const output = await pandiff.trackChanges(
         `test/track_changes_${task}.docx`
       );
-      expect(output).to.equal(
-        fs.readFileSync(`test/track_changes_${task}.md`, 'utf8')
-      );
+      const expected = fs.readFileSync(`test/track_changes_${task}.md`, 'utf8');
+      expectWithFallback(output, expected, `test/track_changes_${task}.md`);
     })
   );
 });
@@ -74,7 +95,8 @@ describe('Misc', () => {
     const text = await pandiff.normalise(
       fs.readFileSync('test/normalise.in.md', 'utf8')
     );
-    expect(text).to.equal(fs.readFileSync('test/normalise.out.md', 'utf8'));
+    const expected = fs.readFileSync('test/normalise.out.md', 'utf8');
+    expectWithFallback(text, expected, 'test/normalise.out.md');
   });
   it('quotes', async () => {
     let output = await pandiff('said “foo bar”', 'said “Foo bar”');
@@ -113,12 +135,13 @@ describe('Misc', () => {
     const output = await pandiff('![foo](x.png)', '![bar](x.png)');
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n');
   });
+  */
   it('tables', async () => {
     const output = await pandiff('test/old-table.md', 'test/new-table.md', {
       files: true,
       to: 'html',
     });
-    expect(output).to.equal(fs.readFileSync('test/diff-table.html', 'utf8'));
+    const expected = fs.readFileSync('test/diff-table.html', 'utf8');
+    expectWithFallback(output, expected, 'test/diff-table.html');
   });
-  */
 });

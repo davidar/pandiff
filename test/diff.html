@@ -6,882 +6,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>-</title>
   <style>
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        background-color: #ffffff;
-        color: #a0a0a0;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
-    div.sourceCode
-      { color: #1f1c1b; background-color: #ffffff; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #1f1c1b; } /* Normal */
-    code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
-    code span.an { color: #ca60ca; } /* Annotation */
-    code span.at { color: #0057ae; } /* Attribute */
-    code span.bn { color: #b08000; } /* BaseN */
-    code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
-    code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #924c9d; } /* Char */
-    code span.cn { color: #aa5500; } /* Constant */
-    code span.co { color: #898887; } /* Comment */
-    code span.cv { color: #0095ff; } /* CommentVar */
-    code span.do { color: #607880; } /* Documentation */
-    code span.dt { color: #0057ae; } /* DataType */
-    code span.dv { color: #b08000; } /* DecVal */
-    code span.er { color: #bf0303; text-decoration: underline; } /* Error */
-    code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
-    code span.fl { color: #b08000; } /* Float */
-    code span.fu { color: #644a9b; } /* Function */
-    code span.im { color: #ff5500; } /* Import */
-    code span.in { color: #b08000; } /* Information */
-    code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
-    code span.op { color: #1f1c1b; } /* Operator */
-    code span.ot { color: #006e28; } /* Other */
-    code span.pp { color: #006e28; } /* Preprocessor */
-    code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
-    code span.sc { color: #3daee9; } /* SpecialChar */
-    code span.ss { color: #ff5500; } /* SpecialString */
-    code span.st { color: #bf0303; } /* String */
-    code span.va { color: #0057ae; } /* Variable */
-    code span.vs { color: #bf0303; } /* VerbatimString */
-    code span.wa { color: #bf0303; } /* Warning */
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  </style>
-  <style type="text/css">.markdown-body .octicon {
-display: inline-block;
-fill: currentColor;
-vertical-align: text-bottom;
-}
-.markdown-body .anchor {
-float: left;
-line-height: 1;
-margin-left: -20px;
-padding-right: 4px;
-}
-.markdown-body .anchor:focus {
-outline: none;
-}
-.markdown-body h1 .octicon-link,
-.markdown-body h2 .octicon-link,
-.markdown-body h3 .octicon-link,
-.markdown-body h4 .octicon-link,
-.markdown-body h5 .octicon-link,
-.markdown-body h6 .octicon-link {
-color: #1b1f23;
-vertical-align: middle;
-visibility: hidden;
-}
-.markdown-body h1:hover .anchor,
-.markdown-body h2:hover .anchor,
-.markdown-body h3:hover .anchor,
-.markdown-body h4:hover .anchor,
-.markdown-body h5:hover .anchor,
-.markdown-body h6:hover .anchor {
-text-decoration: none;
-}
-.markdown-body h1:hover .anchor .octicon-link,
-.markdown-body h2:hover .anchor .octicon-link,
-.markdown-body h3:hover .anchor .octicon-link,
-.markdown-body h4:hover .anchor .octicon-link,
-.markdown-body h5:hover .anchor .octicon-link,
-.markdown-body h6:hover .anchor .octicon-link {
-visibility: visible;
-}
-.markdown-body h1:hover .anchor .octicon-link:before,
-.markdown-body h2:hover .anchor .octicon-link:before,
-.markdown-body h3:hover .anchor .octicon-link:before,
-.markdown-body h4:hover .anchor .octicon-link:before,
-.markdown-body h5:hover .anchor .octicon-link:before,
-.markdown-body h6:hover .anchor .octicon-link:before {
-width: 16px;
-height: 16px;
-content: ' ';
-display: inline-block;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
-}.markdown-body {
--ms-text-size-adjust: 100%;
--webkit-text-size-adjust: 100%;
-line-height: 1.5;
-color: #24292e;
-font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
-font-size: 16px;
-line-height: 1.5;
-word-wrap: break-word;
-}
-.markdown-body details {
-display: block;
-}
-.markdown-body summary {
-display: list-item;
-}
-.markdown-body a {
-background-color: initial;
-}
-.markdown-body a:active,
-.markdown-body a:hover {
-outline-width: 0;
-}
-.markdown-body strong {
-font-weight: inherit;
-font-weight: bolder;
-}
-.markdown-body h1 {
-font-size: 2em;
-margin: .67em 0;
-}
-.markdown-body img {
-border-style: none;
-}
-.markdown-body code,
-.markdown-body kbd,
-.markdown-body pre {
-font-family: monospace,monospace;
-font-size: 1em;
-}
-.markdown-body hr {
-box-sizing: initial;
-height: 0;
-overflow: visible;
-}
-.markdown-body input {
-font: inherit;
-margin: 0;
-}
-.markdown-body input {
-overflow: visible;
-}
-.markdown-body [type=checkbox] {
-box-sizing: border-box;
-padding: 0;
-}
-.markdown-body * {
-box-sizing: border-box;
-}
-.markdown-body input {
-font-family: inherit;
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
 font-size: inherit;
-line-height: inherit;
-}
-.markdown-body a {
-color: #0366d6;
-text-decoration: none;
-}
-.markdown-body a:hover {
-text-decoration: underline;
-}
-.markdown-body strong {
-font-weight: 600;
-}
-.markdown-body hr {
-height: 0;
-margin: 15px 0;
-overflow: hidden;
-background: transparent;
-border: 0;
-border-bottom: 1px solid #dfe2e5;
-}
-.markdown-body hr:after,
-.markdown-body hr:before {
-display: table;
-content: "";
-}
-.markdown-body hr:after {
-clear: both;
-}
-.markdown-body table {
-border-spacing: 0;
-border-collapse: collapse;
-}
-.markdown-body td,
-.markdown-body th {
-padding: 0;
-}
-.markdown-body details summary {
-cursor: pointer;
-}
-.markdown-body kbd {
-display: inline-block;
-padding: 3px 5px;
-font: 11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-line-height: 10px;
-color: #444d56;
-vertical-align: middle;
-background-color: #fafbfc;
-border: 1px solid #d1d5da;
-border-radius: 3px;
-box-shadow: inset 0 -1px 0 #d1d5da;
-}
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
-margin-top: 0;
-margin-bottom: 0;
-}
-.markdown-body h1 {
-font-size: 32px;
-}
-.markdown-body h1,
-.markdown-body h2 {
-font-weight: 600;
-}
-.markdown-body h2 {
-font-size: 24px;
-}
-.markdown-body h3 {
-font-size: 20px;
-}
-.markdown-body h3,
-.markdown-body h4 {
-font-weight: 600;
-}
-.markdown-body h4 {
-font-size: 16px;
-}
-.markdown-body h5 {
-font-size: 14px;
-}
-.markdown-body h5,
-.markdown-body h6 {
-font-weight: 600;
-}
-.markdown-body h6 {
-font-size: 12px;
-}
-.markdown-body p {
-margin-top: 0;
-margin-bottom: 10px;
-}
-.markdown-body blockquote {
-margin: 0;
-}
-.markdown-body ol,
-.markdown-body ul {
-padding-left: 0;
-margin-top: 0;
-margin-bottom: 0;
-}
-.markdown-body ol ol,
-.markdown-body ul ol {
-list-style-type: lower-roman;
-}
-.markdown-body ol ol ol,
-.markdown-body ol ul ol,
-.markdown-body ul ol ol,
-.markdown-body ul ul ol {
-list-style-type: lower-alpha;
-}
-.markdown-body dd {
-margin-left: 0;
-}
-.markdown-body code,
-.markdown-body pre {
-font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-font-size: 12px;
-}
-.markdown-body pre {
-margin-top: 0;
-margin-bottom: 0;
-}
-.markdown-body input::-webkit-inner-spin-button,
-.markdown-body input::-webkit-outer-spin-button {
-margin: 0;
--webkit-appearance: none;
-appearance: none;
-}
-.markdown-body :checked+.radio-label {
-position: relative;
-z-index: 1;
-border-color: #0366d6;
-}
-.markdown-body .border {
-border: 1px solid #e1e4e8!important;
-}
-.markdown-body .border-0 {
-border: 0!important;
-}
-.markdown-body .border-bottom {
-border-bottom: 1px solid #e1e4e8!important;
-}
-.markdown-body .rounded-1 {
-border-radius: 3px!important;
-}
-.markdown-body .bg-white {
-background-color: #fff!important;
-}
-.markdown-body .bg-gray-light {
-background-color: #fafbfc!important;
-}
-.markdown-body .text-gray-light {
-color: #6a737d!important;
-}
-.markdown-body .mb-0 {
-margin-bottom: 0!important;
-}
-.markdown-body .my-2 {
-margin-top: 8px!important;
-margin-bottom: 8px!important;
-}
-.markdown-body .pl-0 {
-padding-left: 0!important;
-}
-.markdown-body .py-0 {
-padding-top: 0!important;
-padding-bottom: 0!important;
-}
-.markdown-body .pl-1 {
-padding-left: 4px!important;
-}
-.markdown-body .pl-2 {
-padding-left: 8px!important;
-}
-.markdown-body .py-2 {
-padding-top: 8px!important;
-padding-bottom: 8px!important;
-}
-.markdown-body .pl-3,
-.markdown-body .px-3 {
-padding-left: 16px!important;
-}
-.markdown-body .px-3 {
-padding-right: 16px!important;
-}
-.markdown-body .pl-4 {
-padding-left: 24px!important;
-}
-.markdown-body .pl-5 {
-padding-left: 32px!important;
-}
-.markdown-body .pl-6 {
-padding-left: 40px!important;
-}
-.markdown-body .f6 {
-font-size: 12px!important;
-}
-.markdown-body .lh-condensed {
-line-height: 1.25!important;
-}
-.markdown-body .text-bold {
-font-weight: 600!important;
-}
-.markdown-body .pl-c {
-color: #6a737d;
-}
-.markdown-body .pl-c1,
-.markdown-body .pl-s .pl-v {
-color: #005cc5;
-}
-.markdown-body .pl-e,
-.markdown-body .pl-en {
-color: #6f42c1;
-}
-.markdown-body .pl-s .pl-s1,
-.markdown-body .pl-smi {
-color: #24292e;
-}
-.markdown-body .pl-ent {
-color: #22863a;
-}
-.markdown-body .pl-k {
-color: #d73a49;
-}
-.markdown-body .pl-pds,
-.markdown-body .pl-s,
-.markdown-body .pl-s .pl-pse .pl-s1,
-.markdown-body .pl-sr,
-.markdown-body .pl-sr .pl-cce,
-.markdown-body .pl-sr .pl-sra,
-.markdown-body .pl-sr .pl-sre {
-color: #032f62;
-}
-.markdown-body .pl-smw,
-.markdown-body .pl-v {
-color: #e36209;
-}
-.markdown-body .pl-bu {
-color: #b31d28;
-}
-.markdown-body .pl-ii {
-color: #fafbfc;
-background-color: #b31d28;
-}
-.markdown-body .pl-c2 {
-color: #fafbfc;
-background-color: #d73a49;
-}
-.markdown-body .pl-c2:before {
-content: "^M";
-}
-.markdown-body .pl-sr .pl-cce {
-font-weight: 700;
-color: #22863a;
-}
-.markdown-body .pl-ml {
-color: #735c0f;
-}
-.markdown-body .pl-mh,
-.markdown-body .pl-mh .pl-en,
-.markdown-body .pl-ms {
-font-weight: 700;
-color: #005cc5;
-}
-.markdown-body .pl-mi {
-font-style: italic;
-color: #24292e;
-}
-.markdown-body .pl-mb {
-font-weight: 700;
-color: #24292e;
-}
-.markdown-body .pl-md {
-color: #b31d28;
-background-color: #ffeef0;
-}
-.markdown-body .pl-mi1 {
-color: #22863a;
-background-color: #f0fff4;
-}
-.markdown-body .pl-mc {
-color: #e36209;
-background-color: #ffebda;
-}
-.markdown-body .pl-mi2 {
-color: #f6f8fa;
-background-color: #005cc5;
-}
-.markdown-body .pl-mdr {
-font-weight: 700;
-color: #6f42c1;
-}
-.markdown-body .pl-ba {
-color: #586069;
-}
-.markdown-body .pl-sg {
-color: #959da5;
-}
-.markdown-body .pl-corl {
-text-decoration: underline;
-color: #032f62;
-}
-.markdown-body .mb-0 {
-margin-bottom: 0!important;
-}
-.markdown-body .my-2 {
-margin-bottom: 8px!important;
-}
-.markdown-body .my-2 {
-margin-top: 8px!important;
-}
-.markdown-body .pl-0 {
-padding-left: 0!important;
-}
-.markdown-body .py-0 {
-padding-top: 0!important;
-padding-bottom: 0!important;
-}
-.markdown-body .pl-1 {
-padding-left: 4px!important;
-}
-.markdown-body .pl-2 {
-padding-left: 8px!important;
-}
-.markdown-body .py-2 {
-padding-top: 8px!important;
-padding-bottom: 8px!important;
-}
-.markdown-body .pl-3 {
-padding-left: 16px!important;
-}
-.markdown-body .pl-4 {
-padding-left: 24px!important;
-}
-.markdown-body .pl-5 {
-padding-left: 32px!important;
-}
-.markdown-body .pl-6 {
-padding-left: 40px!important;
-}
-.markdown-body .pl-7 {
-padding-left: 48px!important;
-}
-.markdown-body .pl-8 {
-padding-left: 64px!important;
-}
-.markdown-body .pl-9 {
-padding-left: 80px!important;
-}
-.markdown-body .pl-10 {
-padding-left: 96px!important;
-}
-.markdown-body .pl-11 {
-padding-left: 112px!important;
-}
-.markdown-body .pl-12 {
-padding-left: 128px!important;
-}
-.markdown-body hr {
-border-bottom-color: #eee;
-}
-.markdown-body kbd {
-display: inline-block;
-padding: 3px 5px;
-font: 11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-line-height: 10px;
-color: #444d56;
-vertical-align: middle;
-background-color: #fafbfc;
-border: 1px solid #d1d5da;
-border-radius: 3px;
-box-shadow: inset 0 -1px 0 #d1d5da;
-}
-.markdown-body:after,
-.markdown-body:before {
-display: table;
-content: "";
-}
-.markdown-body:after {
-clear: both;
-}
-.markdown-body>:first-child {
-margin-top: 0!important;
-}
-.markdown-body>:last-child {
-margin-bottom: 0!important;
-}
-.markdown-body a:not([href]) {
-color: inherit;
-text-decoration: none;
-}
-.markdown-body blockquote,
-.markdown-body details,
-.markdown-body dl,
-.markdown-body ol,
-.markdown-body p,
-.markdown-body pre,
-.markdown-body table,
-.markdown-body ul {
-margin-top: 0;
-margin-bottom: 16px;
-}
-.markdown-body hr {
-height: .25em;
-padding: 0;
-margin: 24px 0;
-background-color: #e1e4e8;
-border: 0;
-}
-.markdown-body blockquote {
-padding: 0 1em;
-color: #6a737d;
-border-left: .25em solid #dfe2e5;
-}
-.markdown-body blockquote>:first-child {
-margin-top: 0;
-}
-.markdown-body blockquote>:last-child {
-margin-bottom: 0;
-}
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
-margin-top: 24px;
-margin-bottom: 16px;
-font-weight: 600;
-line-height: 1.25;
-}
-.markdown-body h1 {
-font-size: 2em;
-}
-.markdown-body h1,
-.markdown-body h2 {
-padding-bottom: .3em;
-border-bottom: 1px solid #eaecef;
-}
-.markdown-body h2 {
-font-size: 1.5em;
-}
-.markdown-body h3 {
-font-size: 1.25em;
-}
-.markdown-body h4 {
-font-size: 1em;
-}
-.markdown-body h5 {
-font-size: .875em;
-}
-.markdown-body h6 {
-font-size: .85em;
-color: #6a737d;
-}
-.markdown-body ol,
-.markdown-body ul {
-padding-left: 2em;
-}
-.markdown-body ol ol,
-.markdown-body ol ul,
-.markdown-body ul ol,
-.markdown-body ul ul {
-margin-top: 0;
-margin-bottom: 0;
-}
-.markdown-body li {
-word-wrap: break-all;
-}
-.markdown-body li>p {
-margin-top: 16px;
-}
-.markdown-body li+li {
-margin-top: .25em;
-}
-.markdown-body dl {
-padding: 0;
-}
-.markdown-body dl dt {
-padding: 0;
-margin-top: 16px;
-font-size: 1em;
-font-style: italic;
-font-weight: 600;
-}
-.markdown-body dl dd {
-padding: 0 16px;
-margin-bottom: 16px;
-}
-.markdown-body table {
-display: block;
-width: 100%;
-overflow: auto;
-}
-.markdown-body table th {
-font-weight: 600;
-}
-.markdown-body table td,
-.markdown-body table th {
-padding: 6px 13px;
-border: 1px solid #dfe2e5;
-}
-.markdown-body table tr {
-background-color: #fff;
-border-top: 1px solid #c6cbd1;
-}
-.markdown-body table tr:nth-child(2n) {
-background-color: #f6f8fa;
-}
-.markdown-body img {
-max-width: 100%;
-box-sizing: initial;
-background-color: #fff;
-}
-.markdown-body img[align=right] {
-padding-left: 20px;
-}
-.markdown-body img[align=left] {
-padding-right: 20px;
-}
-.markdown-body code {
-padding: .2em .4em;
-margin: 0;
-font-size: 85%;
-background-color: rgba(27,31,35,.05);
-border-radius: 3px;
-}
-.markdown-body pre {
-word-wrap: normal;
-}
-.markdown-body pre>code {
-padding: 0;
-margin: 0;
-font-size: 100%;
-word-break: normal;
-white-space: pre;
-background: transparent;
-border: 0;
-}
-.markdown-body .highlight {
-margin-bottom: 16px;
-}
-.markdown-body .highlight pre {
-margin-bottom: 0;
-word-break: normal;
-}
-.markdown-body .highlight pre,
-.markdown-body pre {
-padding: 16px;
-overflow: auto;
-font-size: 85%;
-line-height: 1.45;
-background-color: #f6f8fa;
-border-radius: 3px;
-}
-.markdown-body pre code {
-display: inline;
-max-width: auto;
-padding: 0;
-margin: 0;
-overflow: visible;
-line-height: inherit;
-word-wrap: normal;
-background-color: initial;
-border: 0;
-}
-.markdown-body .commit-tease-sha {
-display: inline-block;
-font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-font-size: 90%;
-color: #444d56;
-}
-.markdown-body .full-commit .btn-outline:not(:disabled):hover {
-color: #005cc5;
-border-color: #005cc5;
-}
-.markdown-body .blob-wrapper {
-overflow-x: auto;
-overflow-y: hidden;
-}
-.markdown-body .blob-wrapper-embedded {
-max-height: 240px;
-overflow-y: auto;
-}
-.markdown-body .blob-num {
-width: 1%;
-min-width: 50px;
-padding-right: 10px;
-padding-left: 10px;
-font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-font-size: 12px;
-line-height: 20px;
-color: rgba(27,31,35,.3);
-text-align: right;
-white-space: nowrap;
-vertical-align: top;
-cursor: pointer;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-}
-.markdown-body .blob-num:hover {
-color: rgba(27,31,35,.6);
-}
-.markdown-body .blob-num:before {
-content: attr(data-line-number);
-}
-.markdown-body .blob-code {
-position: relative;
-padding-right: 10px;
-padding-left: 10px;
-line-height: 20px;
-vertical-align: top;
-}
-.markdown-body .blob-code-inner {
-overflow: visible;
-font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-font-size: 12px;
-color: #24292e;
-word-wrap: normal;
-white-space: pre;
-}
-.markdown-body .pl-token.active,
-.markdown-body .pl-token:hover {
-cursor: pointer;
-background: #ffea7f;
-}
-.markdown-body .tab-size[data-tab-size="1"] {
--moz-tab-size: 1;
-tab-size: 1;
-}
-.markdown-body .tab-size[data-tab-size="2"] {
--moz-tab-size: 2;
-tab-size: 2;
-}
-.markdown-body .tab-size[data-tab-size="3"] {
--moz-tab-size: 3;
-tab-size: 3;
-}
-.markdown-body .tab-size[data-tab-size="4"] {
--moz-tab-size: 4;
-tab-size: 4;
-}
-.markdown-body .tab-size[data-tab-size="5"] {
--moz-tab-size: 5;
-tab-size: 5;
-}
-.markdown-body .tab-size[data-tab-size="6"] {
--moz-tab-size: 6;
-tab-size: 6;
-}
-.markdown-body .tab-size[data-tab-size="7"] {
--moz-tab-size: 7;
-tab-size: 7;
-}
-.markdown-body .tab-size[data-tab-size="8"] {
--moz-tab-size: 8;
-tab-size: 8;
-}
-.markdown-body .tab-size[data-tab-size="9"] {
--moz-tab-size: 9;
-tab-size: 9;
-}
-.markdown-body .tab-size[data-tab-size="10"] {
--moz-tab-size: 10;
-tab-size: 10;
-}
-.markdown-body .tab-size[data-tab-size="11"] {
--moz-tab-size: 11;
-tab-size: 11;
-}
-.markdown-body .tab-size[data-tab-size="12"] {
--moz-tab-size: 12;
-tab-size: 12;
-}
-.markdown-body .task-list-item {
-list-style-type: none;
-}
-.markdown-body .task-list-item+.task-list-item {
-margin-top: 3px;
-}
-.markdown-body .task-list-item input {
-margin: 0 .2em .25em -1.6em;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
 vertical-align: middle;
 }
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+background-color: #ffffff;
+color: #a0a0a0;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0; padding-left: 4px; }
+div.sourceCode
+{ color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } 
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } 
+code span.an { color: #ca60ca; } 
+code span.at { color: #0057ae; } 
+code span.bn { color: #b08000; } 
+code span.bu { color: #644a9b; font-weight: bold; } 
+code span.cf { color: #1f1c1b; font-weight: bold; } 
+code span.ch { color: #924c9d; } 
+code span.cn { color: #aa5500; } 
+code span.co { color: #898887; } 
+code span.cv { color: #0095ff; } 
+code span.do { color: #607880; } 
+code span.dt { color: #0057ae; } 
+code span.dv { color: #b08000; } 
+code span.er { color: #bf0303; text-decoration: underline; } 
+code span.ex { color: #0095ff; font-weight: bold; } 
+code span.fl { color: #b08000; } 
+code span.fu { color: #644a9b; } 
+code span.im { color: #ff5500; } 
+code span.in { color: #b08000; } 
+code span.kw { color: #1f1c1b; font-weight: bold; } 
+code span.op { color: #1f1c1b; } 
+code span.ot { color: #006e28; } 
+code span.pp { color: #006e28; } 
+code span.re { color: #0057ae; background-color: #e0e9f8; } 
+code span.sc { color: #3daee9; } 
+code span.ss { color: #ff5500; } 
+code span.st { color: #bf0303; } 
+code span.va { color: #0057ae; } 
+code span.vs { color: #bf0303; } 
+code span.wa { color: #bf0303; } 
 </style>
+  <link href="data:text/css,%2Emarkdown%2Dbody%20%7B%0A%2D%2Dbase%2Dsize%2D4%3A%200%2E25rem%3B%0A%2D%2Dbase%2Dsize%2D8%3A%200%2E5rem%3B%0A%2D%2Dbase%2Dsize%2D16%3A%201rem%3B%0A%2D%2Dbase%2Dsize%2D24%3A%201%2E5rem%3B%0A%2D%2Dbase%2Dsize%2D40%3A%202%2E5rem%3B%0A%2D%2Dbase%2Dtext%2Dweight%2Dnormal%3A%20400%3B%0A%2D%2Dbase%2Dtext%2Dweight%2Dmedium%3A%20500%3B%0A%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%3A%20600%3B%0A%2D%2DfontStack%2Dmonospace%3A%20ui%2Dmonospace%2C%20SFMono%2DRegular%2C%20SF%20Mono%2C%20Menlo%2C%20Consolas%2C%20Liberation%20Mono%2C%20monospace%3B%0A%2D%2DfgColor%2Daccent%3A%20Highlight%3B%0A%7D%0A%40media%20%28prefers%2Dcolor%2Dscheme%3A%20dark%29%20%7B%0A%2Emarkdown%2Dbody%2C%20%5Bdata%2Dtheme%3D%22dark%22%5D%20%7B%0A%0Acolor%2Dscheme%3A%20dark%3B%0A%2D%2Dfocus%2DoutlineColor%3A%20%231f6feb%3B%0A%2D%2DfgColor%2Ddefault%3A%20%23f0f6fc%3B%0A%2D%2DfgColor%2Dmuted%3A%20%239198a1%3B%0A%2D%2DfgColor%2Daccent%3A%20%234493f8%3B%0A%2D%2DfgColor%2Dsuccess%3A%20%233fb950%3B%0A%2D%2DfgColor%2Dattention%3A%20%23d29922%3B%0A%2D%2DfgColor%2Ddanger%3A%20%23f85149%3B%0A%2D%2DfgColor%2Ddone%3A%20%23ab7df8%3B%0A%2D%2DbgColor%2Ddefault%3A%20%230d1117%3B%0A%2D%2DbgColor%2Dmuted%3A%20%23151b23%3B%0A%2D%2DbgColor%2Dneutral%2Dmuted%3A%20%23656c7633%3B%0A%2D%2DbgColor%2Dattention%2Dmuted%3A%20%23bb800926%3B%0A%2D%2DborderColor%2Ddefault%3A%20%233d444d%3B%0A%2D%2DborderColor%2Dmuted%3A%20%233d444db3%3B%0A%2D%2DborderColor%2Dneutral%2Dmuted%3A%20%233d444db3%3B%0A%2D%2DborderColor%2Daccent%2Demphasis%3A%20%231f6feb%3B%0A%2D%2DborderColor%2Dsuccess%2Demphasis%3A%20%23238636%3B%0A%2D%2DborderColor%2Dattention%2Demphasis%3A%20%239e6a03%3B%0A%2D%2DborderColor%2Ddanger%2Demphasis%3A%20%23da3633%3B%0A%2D%2DborderColor%2Ddone%2Demphasis%3A%20%238957e5%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcomment%3A%20%239198a1%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%3A%20%2379c0ff%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%2Dother%2Dreference%2Dlink%3A%20%23a5d6ff%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%3A%20%23d2a8ff%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstorage%2Dmodifier%2Dimport%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%2Dtag%3A%20%237ee787%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dkeyword%3A%20%23ff7b72%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%3A%20%23a5d6ff%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dvariable%3A%20%23ffa657%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dunmatched%3A%20%23f85149%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dangle%3A%20%239198a1%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dtext%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dbg%3A%20%238e1519%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dtext%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dbg%3A%20%23b62324%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%2Dregexp%3A%20%237ee787%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dlist%3A%20%23f2cc60%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dheading%3A%20%231f6feb%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ditalic%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dbold%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dtext%3A%20%23ffdcd7%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dbg%3A%20%2367060c%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dtext%3A%20%23aff5b4%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dbg%3A%20%23033a16%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dtext%3A%20%23ffdfb6%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dbg%3A%20%235a1e02%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dtext%3A%20%23f0f6fc%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dbg%3A%20%231158c7%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmeta%2Ddiff%2Drange%3A%20%23d2a8ff%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dsublimelinter%2Dgutter%2Dmark%3A%20%233d444d%3B%0A%7D%0A%7D%0A%40media%20%28prefers%2Dcolor%2Dscheme%3A%20light%29%20%7B%0A%2Emarkdown%2Dbody%2C%20%5Bdata%2Dtheme%3D%22light%22%5D%20%7B%0A%0Acolor%2Dscheme%3A%20light%3B%0A%2D%2Dfocus%2DoutlineColor%3A%20%230969da%3B%0A%2D%2DfgColor%2Ddefault%3A%20%231f2328%3B%0A%2D%2DfgColor%2Dmuted%3A%20%2359636e%3B%0A%2D%2DfgColor%2Daccent%3A%20%230969da%3B%0A%2D%2DfgColor%2Dsuccess%3A%20%231a7f37%3B%0A%2D%2DfgColor%2Dattention%3A%20%239a6700%3B%0A%2D%2DfgColor%2Ddanger%3A%20%23d1242f%3B%0A%2D%2DfgColor%2Ddone%3A%20%238250df%3B%0A%2D%2DbgColor%2Ddefault%3A%20%23ffffff%3B%0A%2D%2DbgColor%2Dmuted%3A%20%23f6f8fa%3B%0A%2D%2DbgColor%2Dneutral%2Dmuted%3A%20%23818b981f%3B%0A%2D%2DbgColor%2Dattention%2Dmuted%3A%20%23fff8c5%3B%0A%2D%2DborderColor%2Ddefault%3A%20%23d1d9e0%3B%0A%2D%2DborderColor%2Dmuted%3A%20%23d1d9e0b3%3B%0A%2D%2DborderColor%2Dneutral%2Dmuted%3A%20%23d1d9e0b3%3B%0A%2D%2DborderColor%2Daccent%2Demphasis%3A%20%230969da%3B%0A%2D%2DborderColor%2Dsuccess%2Demphasis%3A%20%231a7f37%3B%0A%2D%2DborderColor%2Dattention%2Demphasis%3A%20%239a6700%3B%0A%2D%2DborderColor%2Ddanger%2Demphasis%3A%20%23cf222e%3B%0A%2D%2DborderColor%2Ddone%2Demphasis%3A%20%238250df%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcomment%3A%20%2359636e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%3A%20%230550ae%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%2Dother%2Dreference%2Dlink%3A%20%230a3069%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%3A%20%236639ba%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstorage%2Dmodifier%2Dimport%3A%20%231f2328%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%2Dtag%3A%20%230550ae%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dkeyword%3A%20%23cf222e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%3A%20%230a3069%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dvariable%3A%20%23953800%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dunmatched%3A%20%2382071e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dangle%3A%20%2359636e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dtext%3A%20%23f6f8fa%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dbg%3A%20%2382071e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dtext%3A%20%23f6f8fa%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dbg%3A%20%23cf222e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%2Dregexp%3A%20%23116329%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dlist%3A%20%233b2300%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dheading%3A%20%230550ae%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ditalic%3A%20%231f2328%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dbold%3A%20%231f2328%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dtext%3A%20%2382071e%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dbg%3A%20%23ffebe9%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dtext%3A%20%23116329%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dbg%3A%20%23dafbe1%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dtext%3A%20%23953800%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dbg%3A%20%23ffd8b5%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dtext%3A%20%23d1d9e0%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dbg%3A%20%230550ae%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmeta%2Ddiff%2Drange%3A%20%238250df%3B%0A%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dsublimelinter%2Dgutter%2Dmark%3A%20%23818b98%3B%0A%7D%0A%7D%0A%2Emarkdown%2Dbody%20%7B%0A%2Dms%2Dtext%2Dsize%2Dadjust%3A%20100%25%3B%0A%2Dwebkit%2Dtext%2Dsize%2Dadjust%3A%20100%25%3B%0Amargin%3A%200%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Ddefault%29%3B%0Afont%2Dfamily%3A%20%2Dapple%2Dsystem%2CBlinkMacSystemFont%2C%22Segoe%20UI%22%2C%22Noto%20Sans%22%2CHelvetica%2CArial%2Csans%2Dserif%2C%22Apple%20Color%20Emoji%22%2C%22Segoe%20UI%20Emoji%22%3B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%201%2E5%3B%0Aword%2Dwrap%3A%20break%2Dword%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eocticon%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Afill%3A%20currentColor%3B%0Avertical%2Dalign%3A%20text%2Dbottom%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%2C%0A%2Emarkdown%2Dbody%20h2%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%2C%0A%2Emarkdown%2Dbody%20h3%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%2C%0A%2Emarkdown%2Dbody%20h4%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%2C%0A%2Emarkdown%2Dbody%20h5%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%2C%0A%2Emarkdown%2Dbody%20h6%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%3Abefore%20%7B%0Awidth%3A%2016px%3B%0Aheight%3A%2016px%3B%0Acontent%3A%20%27%20%27%3B%0Adisplay%3A%20inline%2Dblock%3B%0Abackground%2Dcolor%3A%20currentColor%3B%0A%2Dwebkit%2Dmask%2Dimage%3A%20url%28%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20version%3D%271%2E1%27%20aria%2Dhidden%3D%27true%27%3E%3Cpath%20fill%2Drule%3D%27evenodd%27%20d%3D%27M7%2E775%203%2E275a%2E75%2E75%200%20001%2E06%201%2E06l1%2E25%2D1%2E25a2%202%200%20112%2E83%202%2E83l%2D2%2E5%202%2E5a2%202%200%2001%2D2%2E83%200%20%2E75%2E75%200%2000%2D1%2E06%201%2E06%203%2E5%203%2E5%200%20004%2E95%200l2%2E5%2D2%2E5a3%2E5%203%2E5%200%2000%2D4%2E95%2D4%2E95l%2D1%2E25%201%2E25zm%2D4%2E69%209%2E64a2%202%200%20010%2D2%2E83l2%2E5%2D2%2E5a2%202%200%20012%2E83%200%20%2E75%2E75%200%20001%2E06%2D1%2E06%203%2E5%203%2E5%200%2000%2D4%2E95%200l%2D2%2E5%202%2E5a3%2E5%203%2E5%200%20004%2E95%204%2E95l1%2E25%2D1%2E25a%2E75%2E75%200%2000%2D1%2E06%2D1%2E06l%2D1%2E25%201%2E25a2%202%200%2001%2D2%2E83%200z%27%3E%3C%2Fpath%3E%3C%2Fsvg%3E%22%29%3B%0Amask%2Dimage%3A%20url%28%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20version%3D%271%2E1%27%20aria%2Dhidden%3D%27true%27%3E%3Cpath%20fill%2Drule%3D%27evenodd%27%20d%3D%27M7%2E775%203%2E275a%2E75%2E75%200%20001%2E06%201%2E06l1%2E25%2D1%2E25a2%202%200%20112%2E83%202%2E83l%2D2%2E5%202%2E5a2%202%200%2001%2D2%2E83%200%20%2E75%2E75%200%2000%2D1%2E06%201%2E06%203%2E5%203%2E5%200%20004%2E95%200l2%2E5%2D2%2E5a3%2E5%203%2E5%200%2000%2D4%2E95%2D4%2E95l%2D1%2E25%201%2E25zm%2D4%2E69%209%2E64a2%202%200%20010%2D2%2E83l2%2E5%2D2%2E5a2%202%200%20012%2E83%200%20%2E75%2E75%200%20001%2E06%2D1%2E06%203%2E5%203%2E5%200%2000%2D4%2E95%200l%2D2%2E5%202%2E5a3%2E5%203%2E5%200%20004%2E95%204%2E95l1%2E25%2D1%2E25a%2E75%2E75%200%2000%2D1%2E06%2D1%2E06l%2D1%2E25%201%2E25a2%202%200%2001%2D2%2E83%200z%27%3E%3C%2Fpath%3E%3C%2Fsvg%3E%22%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20details%2C%0A%2Emarkdown%2Dbody%20figcaption%2C%0A%2Emarkdown%2Dbody%20figure%20%7B%0Adisplay%3A%20block%3B%0A%7D%0A%2Emarkdown%2Dbody%20summary%20%7B%0Adisplay%3A%20list%2Ditem%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Bhidden%5D%20%7B%0Adisplay%3A%20none%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%20%7B%0Abackground%2Dcolor%3A%20transparent%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Daccent%29%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20abbr%5Btitle%5D%20%7B%0Aborder%2Dbottom%3A%20none%3B%0A%2Dwebkit%2Dtext%2Ddecoration%3A%20underline%20dotted%3B%0Atext%2Ddecoration%3A%20underline%20dotted%3B%0A%7D%0A%2Emarkdown%2Dbody%20b%2C%0A%2Emarkdown%2Dbody%20strong%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20dfn%20%7B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%20%7B%0Amargin%3A%20%2E67em%200%3B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Apadding%2Dbottom%3A%20%2E3em%3B%0Afont%2Dsize%3A%202em%3B%0Aborder%2Dbottom%3A%201px%20solid%20var%28%2D%2DborderColor%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20mark%20%7B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Dattention%2Dmuted%29%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20small%20%7B%0Afont%2Dsize%3A%2090%25%3B%0A%7D%0A%2Emarkdown%2Dbody%20sub%2C%0A%2Emarkdown%2Dbody%20sup%20%7B%0Afont%2Dsize%3A%2075%25%3B%0Aline%2Dheight%3A%200%3B%0Aposition%3A%20relative%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%7D%0A%2Emarkdown%2Dbody%20sub%20%7B%0Abottom%3A%20%2D0%2E25em%3B%0A%7D%0A%2Emarkdown%2Dbody%20sup%20%7B%0Atop%3A%20%2D0%2E5em%3B%0A%7D%0A%2Emarkdown%2Dbody%20img%20%7B%0Aborder%2Dstyle%3A%20none%3B%0Amax%2Dwidth%3A%20100%25%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0A%2Emarkdown%2Dbody%20code%2C%0A%2Emarkdown%2Dbody%20kbd%2C%0A%2Emarkdown%2Dbody%20pre%2C%0A%2Emarkdown%2Dbody%20samp%20%7B%0Afont%2Dfamily%3A%20monospace%3B%0Afont%2Dsize%3A%201em%3B%0A%7D%0A%2Emarkdown%2Dbody%20figure%20%7B%0Amargin%3A%201em%20var%28%2D%2Dbase%2Dsize%2D40%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20hr%20%7B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0Aoverflow%3A%20hidden%3B%0Abackground%3A%20transparent%3B%0Aborder%2Dbottom%3A%201px%20solid%20var%28%2D%2DborderColor%2Dmuted%29%3B%0Aheight%3A%20%2E25em%3B%0Apadding%3A%200%3B%0Amargin%3A%20var%28%2D%2Dbase%2Dsize%2D24%29%200%3B%0Abackground%2Dcolor%3A%20var%28%2D%2DborderColor%2Ddefault%29%3B%0Aborder%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20input%20%7B%0Afont%3A%20inherit%3B%0Amargin%3A%200%3B%0Aoverflow%3A%20visible%3B%0Afont%2Dfamily%3A%20inherit%3B%0Afont%2Dsize%3A%20inherit%3B%0Aline%2Dheight%3A%20inherit%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Btype%3Dbutton%5D%2C%0A%2Emarkdown%2Dbody%20%5Btype%3Dreset%5D%2C%0A%2Emarkdown%2Dbody%20%5Btype%3Dsubmit%5D%20%7B%0A%2Dwebkit%2Dappearance%3A%20button%3B%0Aappearance%3A%20button%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Btype%3Dcheckbox%5D%2C%0A%2Emarkdown%2Dbody%20%5Btype%3Dradio%5D%20%7B%0Abox%2Dsizing%3A%20border%2Dbox%3B%0Apadding%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Btype%3Dnumber%5D%3A%3A%2Dwebkit%2Dinner%2Dspin%2Dbutton%2C%0A%2Emarkdown%2Dbody%20%5Btype%3Dnumber%5D%3A%3A%2Dwebkit%2Douter%2Dspin%2Dbutton%20%7B%0Aheight%3A%20auto%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Btype%3Dsearch%5D%3A%3A%2Dwebkit%2Dsearch%2Dcancel%2Dbutton%2C%0A%2Emarkdown%2Dbody%20%5Btype%3Dsearch%5D%3A%3A%2Dwebkit%2Dsearch%2Ddecoration%20%7B%0A%2Dwebkit%2Dappearance%3A%20none%3B%0Aappearance%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%20%7B%0Acolor%3A%20inherit%3B%0Aopacity%3A%20%2E54%3B%0A%7D%0A%2Emarkdown%2Dbody%20%3A%3A%2Dwebkit%2Dfile%2Dupload%2Dbutton%20%7B%0A%2Dwebkit%2Dappearance%3A%20button%3B%0Aappearance%3A%20button%3B%0Afont%3A%20inherit%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Ahover%20%7B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0A%2Emarkdown%2Dbody%20%3A%3Aplaceholder%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Dmuted%29%3B%0Aopacity%3A%201%3B%0A%7D%0A%2Emarkdown%2Dbody%20hr%3A%3Abefore%20%7B%0Adisplay%3A%20table%3B%0Acontent%3A%20%22%22%3B%0A%7D%0A%2Emarkdown%2Dbody%20hr%3A%3Aafter%20%7B%0Adisplay%3A%20table%3B%0Aclear%3A%20both%3B%0Acontent%3A%20%22%22%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20%7B%0Aborder%2Dspacing%3A%200%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0Adisplay%3A%20block%3B%0Awidth%3A%20max%2Dcontent%3B%0Amax%2Dwidth%3A%20100%25%3B%0Aoverflow%3A%20auto%3B%0Afont%2Dvariant%3A%20tabular%2Dnums%3B%0A%7D%0A%2Emarkdown%2Dbody%20td%2C%0A%2Emarkdown%2Dbody%20th%20%7B%0Apadding%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20details%20summary%20%7B%0Acursor%3A%20pointer%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Afocus%2C%0A%2Emarkdown%2Dbody%20%5Brole%3Dbutton%5D%3Afocus%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dradio%5D%3Afocus%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dcheckbox%5D%3Afocus%20%7B%0Aoutline%3A%202px%20solid%20var%28%2D%2Dfocus%2DoutlineColor%29%3B%0Aoutline%2Doffset%3A%20%2D2px%3B%0Abox%2Dshadow%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20%5Brole%3Dbutton%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dradio%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dcheckbox%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%20%7B%0Aoutline%3A%20solid%201px%20transparent%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Afocus%2Dvisible%2C%0A%2Emarkdown%2Dbody%20%5Brole%3Dbutton%5D%3Afocus%2Dvisible%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dradio%5D%3Afocus%2Dvisible%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dcheckbox%5D%3Afocus%2Dvisible%20%7B%0Aoutline%3A%202px%20solid%20var%28%2D%2Dfocus%2DoutlineColor%29%3B%0Aoutline%2Doffset%3A%20%2D2px%3B%0Abox%2Dshadow%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Anot%28%5Bclass%5D%29%3Afocus%2C%0A%2Emarkdown%2Dbody%20a%3Anot%28%5Bclass%5D%29%3Afocus%2Dvisible%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dradio%5D%3Afocus%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dradio%5D%3Afocus%2Dvisible%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dcheckbox%5D%3Afocus%2C%0A%2Emarkdown%2Dbody%20input%5Btype%3Dcheckbox%5D%3Afocus%2Dvisible%20%7B%0Aoutline%2Doffset%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20kbd%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Apadding%3A%20var%28%2D%2Dbase%2Dsize%2D4%29%3B%0Afont%3A%2011px%20var%28%2D%2DfontStack%2Dmonospace%2C%20ui%2Dmonospace%2C%20SFMono%2DRegular%2C%20SF%20Mono%2C%20Menlo%2C%20Consolas%2C%20Liberation%20Mono%2C%20monospace%29%3B%0Aline%2Dheight%3A%2010px%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0Avertical%2Dalign%3A%20middle%3B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Dmuted%29%3B%0Aborder%3A%20solid%201px%20var%28%2D%2DborderColor%2Dneutral%2Dmuted%29%3B%0Aborder%2Dbottom%2Dcolor%3A%20var%28%2D%2DborderColor%2Dneutral%2Dmuted%29%3B%0Aborder%2Dradius%3A%206px%3B%0Abox%2Dshadow%3A%20inset%200%20%2D1px%200%20var%28%2D%2DborderColor%2Dneutral%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%2C%0A%2Emarkdown%2Dbody%20h2%2C%0A%2Emarkdown%2Dbody%20h3%2C%0A%2Emarkdown%2Dbody%20h4%2C%0A%2Emarkdown%2Dbody%20h5%2C%0A%2Emarkdown%2Dbody%20h6%20%7B%0Amargin%2Dtop%3A%20var%28%2D%2Dbase%2Dsize%2D24%29%3B%0Amargin%2Dbottom%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Aline%2Dheight%3A%201%2E25%3B%0A%7D%0A%2Emarkdown%2Dbody%20h2%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Apadding%2Dbottom%3A%20%2E3em%3B%0Afont%2Dsize%3A%201%2E5em%3B%0Aborder%2Dbottom%3A%201px%20solid%20var%28%2D%2DborderColor%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20h3%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Afont%2Dsize%3A%201%2E25em%3B%0A%7D%0A%2Emarkdown%2Dbody%20h4%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Afont%2Dsize%3A%201em%3B%0A%7D%0A%2Emarkdown%2Dbody%20h5%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Afont%2Dsize%3A%20%2E875em%3B%0A%7D%0A%2Emarkdown%2Dbody%20h6%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Afont%2Dsize%3A%20%2E85em%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20p%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%2010px%3B%0A%7D%0A%2Emarkdown%2Dbody%20blockquote%20%7B%0Amargin%3A%200%3B%0Apadding%3A%200%201em%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Dmuted%29%3B%0Aborder%2Dleft%3A%20%2E25em%20solid%20var%28%2D%2DborderColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20ul%2C%0A%2Emarkdown%2Dbody%20ol%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%200%3B%0Apadding%2Dleft%3A%202em%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%20ol%2C%0A%2Emarkdown%2Dbody%20ul%20ol%20%7B%0Alist%2Dstyle%2Dtype%3A%20lower%2Droman%3B%0A%7D%0A%2Emarkdown%2Dbody%20ul%20ul%20ol%2C%0A%2Emarkdown%2Dbody%20ul%20ol%20ol%2C%0A%2Emarkdown%2Dbody%20ol%20ul%20ol%2C%0A%2Emarkdown%2Dbody%20ol%20ol%20ol%20%7B%0Alist%2Dstyle%2Dtype%3A%20lower%2Dalpha%3B%0A%7D%0A%2Emarkdown%2Dbody%20dd%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20tt%2C%0A%2Emarkdown%2Dbody%20code%2C%0A%2Emarkdown%2Dbody%20samp%20%7B%0Afont%2Dfamily%3A%20var%28%2D%2DfontStack%2Dmonospace%2C%20ui%2Dmonospace%2C%20SFMono%2DRegular%2C%20SF%20Mono%2C%20Menlo%2C%20Consolas%2C%20Liberation%20Mono%2C%20monospace%29%3B%0Afont%2Dsize%3A%2012px%3B%0A%7D%0A%2Emarkdown%2Dbody%20pre%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%200%3B%0Afont%2Dfamily%3A%20var%28%2D%2DfontStack%2Dmonospace%2C%20ui%2Dmonospace%2C%20SFMono%2DRegular%2C%20SF%20Mono%2C%20Menlo%2C%20Consolas%2C%20Liberation%20Mono%2C%20monospace%29%3B%0Afont%2Dsize%3A%2012px%3B%0Aword%2Dwrap%3A%20normal%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eocticon%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Aoverflow%3A%20visible%20%21important%3B%0Avertical%2Dalign%3A%20text%2Dbottom%3B%0Afill%3A%20currentColor%3B%0A%7D%0A%2Emarkdown%2Dbody%20input%3A%3A%2Dwebkit%2Douter%2Dspin%2Dbutton%2C%0A%2Emarkdown%2Dbody%20input%3A%3A%2Dwebkit%2Dinner%2Dspin%2Dbutton%20%7B%0Amargin%3A%200%3B%0Aappearance%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emr%2D2%20%7B%0Amargin%2Dright%3A%20var%28%2D%2Dbase%2Dsize%2D8%2C%208px%29%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%3A%3Abefore%20%7B%0Adisplay%3A%20table%3B%0Acontent%3A%20%22%22%3B%0A%7D%0A%2Emarkdown%2Dbody%3A%3Aafter%20%7B%0Adisplay%3A%20table%3B%0Aclear%3A%20both%3B%0Acontent%3A%20%22%22%3B%0A%7D%0A%2Emarkdown%2Dbody%3E%2A%3Afirst%2Dchild%20%7B%0Amargin%2Dtop%3A%200%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%3E%2A%3Alast%2Dchild%20%7B%0Amargin%2Dbottom%3A%200%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%20a%3Anot%28%5Bhref%5D%29%20%7B%0Acolor%3A%20inherit%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eabsent%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddanger%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eanchor%20%7B%0Afloat%3A%20left%3B%0Apadding%2Dright%3A%20var%28%2D%2Dbase%2Dsize%2D4%29%3B%0Amargin%2Dleft%3A%20%2D20px%3B%0Aline%2Dheight%3A%201%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eanchor%3Afocus%20%7B%0Aoutline%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20p%2C%0A%2Emarkdown%2Dbody%20blockquote%2C%0A%2Emarkdown%2Dbody%20ul%2C%0A%2Emarkdown%2Dbody%20ol%2C%0A%2Emarkdown%2Dbody%20dl%2C%0A%2Emarkdown%2Dbody%20table%2C%0A%2Emarkdown%2Dbody%20pre%2C%0A%2Emarkdown%2Dbody%20details%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20blockquote%3E%3Afirst%2Dchild%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20blockquote%3E%3Alast%2Dchild%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h2%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h3%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h4%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h5%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h6%20%2Eocticon%2Dlink%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0Avertical%2Dalign%3A%20middle%3B%0Avisibility%3A%20hidden%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%3Ahover%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20h2%3Ahover%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20h3%3Ahover%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20h4%3Ahover%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20h5%3Ahover%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20h6%3Ahover%20%2Eanchor%20%7B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h2%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h3%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h4%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h5%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%2C%0A%2Emarkdown%2Dbody%20h6%3Ahover%20%2Eanchor%20%2Eocticon%2Dlink%20%7B%0Avisibility%3A%20visible%3B%0A%7D%0A%2Emarkdown%2Dbody%20h1%20tt%2C%0A%2Emarkdown%2Dbody%20h1%20code%2C%0A%2Emarkdown%2Dbody%20h2%20tt%2C%0A%2Emarkdown%2Dbody%20h2%20code%2C%0A%2Emarkdown%2Dbody%20h3%20tt%2C%0A%2Emarkdown%2Dbody%20h3%20code%2C%0A%2Emarkdown%2Dbody%20h4%20tt%2C%0A%2Emarkdown%2Dbody%20h4%20code%2C%0A%2Emarkdown%2Dbody%20h5%20tt%2C%0A%2Emarkdown%2Dbody%20h5%20code%2C%0A%2Emarkdown%2Dbody%20h6%20tt%2C%0A%2Emarkdown%2Dbody%20h6%20code%20%7B%0Apadding%3A%200%20%2E2em%3B%0Afont%2Dsize%3A%20inherit%3B%0A%7D%0A%2Emarkdown%2Dbody%20summary%20h1%2C%0A%2Emarkdown%2Dbody%20summary%20h2%2C%0A%2Emarkdown%2Dbody%20summary%20h3%2C%0A%2Emarkdown%2Dbody%20summary%20h4%2C%0A%2Emarkdown%2Dbody%20summary%20h5%2C%0A%2Emarkdown%2Dbody%20summary%20h6%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0A%7D%0A%2Emarkdown%2Dbody%20summary%20h1%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20summary%20h2%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20summary%20h3%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20summary%20h4%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20summary%20h5%20%2Eanchor%2C%0A%2Emarkdown%2Dbody%20summary%20h6%20%2Eanchor%20%7B%0Amargin%2Dleft%3A%20%2D40px%3B%0A%7D%0A%2Emarkdown%2Dbody%20summary%20h1%2C%0A%2Emarkdown%2Dbody%20summary%20h2%20%7B%0Apadding%2Dbottom%3A%200%3B%0Aborder%2Dbottom%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20ul%2Eno%2Dlist%2C%0A%2Emarkdown%2Dbody%20ol%2Eno%2Dlist%20%7B%0Apadding%3A%200%3B%0Alist%2Dstyle%2Dtype%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%5Btype%3D%22a%20s%22%5D%20%7B%0Alist%2Dstyle%2Dtype%3A%20lower%2Dalpha%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%5Btype%3D%22A%20s%22%5D%20%7B%0Alist%2Dstyle%2Dtype%3A%20upper%2Dalpha%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%5Btype%3D%22i%20s%22%5D%20%7B%0Alist%2Dstyle%2Dtype%3A%20lower%2Droman%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%5Btype%3D%22I%20s%22%5D%20%7B%0Alist%2Dstyle%2Dtype%3A%20upper%2Droman%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%5Btype%3D%221%22%5D%20%7B%0Alist%2Dstyle%2Dtype%3A%20decimal%3B%0A%7D%0A%2Emarkdown%2Dbody%20div%3Eol%3Anot%28%5Btype%5D%29%20%7B%0Alist%2Dstyle%2Dtype%3A%20decimal%3B%0A%7D%0A%2Emarkdown%2Dbody%20ul%20ul%2C%0A%2Emarkdown%2Dbody%20ul%20ol%2C%0A%2Emarkdown%2Dbody%20ol%20ol%2C%0A%2Emarkdown%2Dbody%20ol%20ul%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20li%3Ep%20%7B%0Amargin%2Dtop%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20li%2Bli%20%7B%0Amargin%2Dtop%3A%20%2E25em%3B%0A%7D%0A%2Emarkdown%2Dbody%20dl%20%7B%0Apadding%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20dl%20dt%20%7B%0Apadding%3A%200%3B%0Amargin%2Dtop%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Afont%2Dsize%3A%201em%3B%0Afont%2Dstyle%3A%20italic%3B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20dl%20dd%20%7B%0Apadding%3A%200%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Amargin%2Dbottom%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20th%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20th%2C%0A%2Emarkdown%2Dbody%20table%20td%20%7B%0Apadding%3A%206px%2013px%3B%0Aborder%3A%201px%20solid%20var%28%2D%2DborderColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20td%3E%3Alast%2Dchild%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20tr%20%7B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Ddefault%29%3B%0Aborder%2Dtop%3A%201px%20solid%20var%28%2D%2DborderColor%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20tr%3Anth%2Dchild%282n%29%20%7B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Dmuted%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20table%20img%20%7B%0Abackground%2Dcolor%3A%20transparent%3B%0A%7D%0A%2Emarkdown%2Dbody%20img%5Balign%3Dright%5D%20%7B%0Apadding%2Dleft%3A%2020px%3B%0A%7D%0A%2Emarkdown%2Dbody%20img%5Balign%3Dleft%5D%20%7B%0Apadding%2Dright%3A%2020px%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Eemoji%20%7B%0Amax%2Dwidth%3A%20none%3B%0Avertical%2Dalign%3A%20text%2Dtop%3B%0Abackground%2Dcolor%3A%20transparent%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Eframe%20%7B%0Adisplay%3A%20block%3B%0Aoverflow%3A%20hidden%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Eframe%3Espan%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20left%3B%0Awidth%3A%20auto%3B%0Apadding%3A%207px%3B%0Amargin%3A%2013px%200%200%3B%0Aoverflow%3A%20hidden%3B%0Aborder%3A%201px%20solid%20var%28%2D%2DborderColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Eframe%20span%20img%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20left%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Eframe%20span%20span%20%7B%0Adisplay%3A%20block%3B%0Apadding%3A%205px%200%200%3B%0Aclear%3A%20both%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dcenter%20%7B%0Adisplay%3A%20block%3B%0Aoverflow%3A%20hidden%3B%0Aclear%3A%20both%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dcenter%3Espan%20%7B%0Adisplay%3A%20block%3B%0Amargin%3A%2013px%20auto%200%3B%0Aoverflow%3A%20hidden%3B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dcenter%20span%20img%20%7B%0Amargin%3A%200%20auto%3B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dright%20%7B%0Adisplay%3A%20block%3B%0Aoverflow%3A%20hidden%3B%0Aclear%3A%20both%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dright%3Espan%20%7B%0Adisplay%3A%20block%3B%0Amargin%3A%2013px%200%200%3B%0Aoverflow%3A%20hidden%3B%0Atext%2Dalign%3A%20right%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Ealign%2Dright%20span%20img%20%7B%0Amargin%3A%200%3B%0Atext%2Dalign%3A%20right%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Efloat%2Dleft%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20left%3B%0Amargin%2Dright%3A%2013px%3B%0Aoverflow%3A%20hidden%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Efloat%2Dleft%20span%20%7B%0Amargin%3A%2013px%200%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Efloat%2Dright%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20right%3B%0Amargin%2Dleft%3A%2013px%3B%0Aoverflow%3A%20hidden%3B%0A%7D%0A%2Emarkdown%2Dbody%20span%2Efloat%2Dright%3Espan%20%7B%0Adisplay%3A%20block%3B%0Amargin%3A%2013px%20auto%200%3B%0Aoverflow%3A%20hidden%3B%0Atext%2Dalign%3A%20right%3B%0A%7D%0A%2Emarkdown%2Dbody%20code%2C%0A%2Emarkdown%2Dbody%20tt%20%7B%0Apadding%3A%20%2E2em%20%2E4em%3B%0Amargin%3A%200%3B%0Afont%2Dsize%3A%2085%25%3B%0Awhite%2Dspace%3A%20break%2Dspaces%3B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Dneutral%2Dmuted%29%3B%0Aborder%2Dradius%3A%206px%3B%0A%7D%0A%2Emarkdown%2Dbody%20code%20br%2C%0A%2Emarkdown%2Dbody%20tt%20br%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20del%20code%20%7B%0Atext%2Ddecoration%3A%20inherit%3B%0A%7D%0A%2Emarkdown%2Dbody%20samp%20%7B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0A%2Emarkdown%2Dbody%20pre%20code%20%7B%0Afont%2Dsize%3A%20100%25%3B%0A%7D%0A%2Emarkdown%2Dbody%20pre%3Ecode%20%7B%0Apadding%3A%200%3B%0Amargin%3A%200%3B%0Aword%2Dbreak%3A%20normal%3B%0Awhite%2Dspace%3A%20pre%3B%0Abackground%3A%20transparent%3B%0Aborder%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ehighlight%20%7B%0Amargin%2Dbottom%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ehighlight%20pre%20%7B%0Amargin%2Dbottom%3A%200%3B%0Aword%2Dbreak%3A%20normal%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ehighlight%20pre%2C%0A%2Emarkdown%2Dbody%20pre%20%7B%0Apadding%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Aoverflow%3A%20auto%3B%0Afont%2Dsize%3A%2085%25%3B%0Aline%2Dheight%3A%201%2E45%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2DbgColor%2Dmuted%29%3B%0Aborder%2Dradius%3A%206px%3B%0A%7D%0A%2Emarkdown%2Dbody%20pre%20code%2C%0A%2Emarkdown%2Dbody%20pre%20tt%20%7B%0Adisplay%3A%20inline%3B%0Amax%2Dwidth%3A%20auto%3B%0Apadding%3A%200%3B%0Amargin%3A%200%3B%0Aoverflow%3A%20visible%3B%0Aline%2Dheight%3A%20inherit%3B%0Aword%2Dwrap%3A%20normal%3B%0Abackground%2Dcolor%3A%20transparent%3B%0Aborder%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ecsv%2Ddata%20td%2C%0A%2Emarkdown%2Dbody%20%2Ecsv%2Ddata%20th%20%7B%0Apadding%3A%205px%3B%0Aoverflow%3A%20hidden%3B%0Afont%2Dsize%3A%2012px%3B%0Aline%2Dheight%3A%201%3B%0Atext%2Dalign%3A%20left%3B%0Awhite%2Dspace%3A%20nowrap%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ecsv%2Ddata%20%2Eblob%2Dnum%20%7B%0Apadding%3A%2010px%20var%28%2D%2Dbase%2Dsize%2D8%29%209px%3B%0Atext%2Dalign%3A%20right%3B%0Abackground%3A%20var%28%2D%2DbgColor%2Ddefault%29%3B%0Aborder%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ecsv%2Ddata%20tr%20%7B%0Aborder%2Dtop%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ecsv%2Ddata%20th%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dsemibold%2C%20600%29%3B%0Abackground%3A%20var%28%2D%2DbgColor%2Dmuted%29%3B%0Aborder%2Dtop%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Bdata%2Dfootnote%2Dref%5D%3A%3Abefore%20%7B%0Acontent%3A%20%22%5B%22%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Bdata%2Dfootnote%2Dref%5D%3A%3Aafter%20%7B%0Acontent%3A%20%22%5D%22%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20%7B%0Afont%2Dsize%3A%2012px%3B%0Acolor%3A%20var%28%2D%2DfgColor%2Dmuted%29%3B%0Aborder%2Dtop%3A%201px%20solid%20var%28%2D%2DborderColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20ol%20%7B%0Apadding%2Dleft%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20ol%20ul%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Apadding%2Dleft%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Amargin%2Dtop%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20li%20%7B%0Aposition%3A%20relative%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20li%3Atarget%3A%3Abefore%20%7B%0Aposition%3A%20absolute%3B%0Atop%3A%20calc%28var%28%2D%2Dbase%2Dsize%2D8%29%2A%2D1%29%3B%0Aright%3A%20calc%28var%28%2D%2Dbase%2Dsize%2D8%29%2A%2D1%29%3B%0Abottom%3A%20calc%28var%28%2D%2Dbase%2Dsize%2D8%29%2A%2D1%29%3B%0Aleft%3A%20calc%28var%28%2D%2Dbase%2Dsize%2D24%29%2A%2D1%29%3B%0Apointer%2Devents%3A%20none%3B%0Acontent%3A%20%22%22%3B%0Aborder%3A%202px%20solid%20var%28%2D%2DborderColor%2Daccent%2Demphasis%29%3B%0Aborder%2Dradius%3A%206px%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20li%3Atarget%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Efootnotes%20%2Edata%2Dfootnote%2Dbackref%20g%2Demoji%20%7B%0Afont%2Dfamily%3A%20monospace%3B%0A%7D%0A%2Emarkdown%2Dbody%20body%3Ahas%28%3Amodal%29%20%7B%0Apadding%2Dright%3A%20var%28%2D%2Ddialog%2Dscrollgutter%29%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dc%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcomment%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dc1%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Ds%20%2Epl%2Dv%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2De%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Den%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dsmi%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Ds%20%2Epl%2Ds1%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstorage%2Dmodifier%2Dimport%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dent%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dentity%2Dtag%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dk%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dkeyword%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Ds%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dpds%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Ds%20%2Epl%2Dpse%20%2Epl%2Ds1%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dsr%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dsr%20%2Epl%2Dcce%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dsr%20%2Epl%2Dsre%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dsr%20%2Epl%2Dsra%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dv%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dsmw%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dvariable%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dbu%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dunmatched%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dii%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dinvalid%2Dillegal%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dc2%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dcarriage%2Dreturn%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dsr%20%2Epl%2Dcce%20%7B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dstring%2Dregexp%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dml%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dlist%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmh%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dmh%20%2Epl%2Den%2C%0A%2Emarkdown%2Dbody%20%2Epl%2Dms%20%7B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dheading%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmi%20%7B%0Afont%2Dstyle%3A%20italic%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ditalic%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmb%20%7B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dbold%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmd%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Ddeleted%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmi1%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dinserted%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmc%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dchanged%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmi2%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dtext%29%3B%0Abackground%2Dcolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmarkup%2Dignored%2Dbg%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dmdr%20%7B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dmeta%2Ddiff%2Drange%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dba%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dbrackethighlighter%2Dangle%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dsg%20%7B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dsublimelinter%2Dgutter%2Dmark%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Epl%2Dcorl%20%7B%0Atext%2Ddecoration%3A%20underline%3B%0Acolor%3A%20var%28%2D%2Dcolor%2Dprettylights%2Dsyntax%2Dconstant%2Dother%2Dreference%2Dlink%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Brole%3Dbutton%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20%5Brole%3Dtabpanel%5D%5Btabindex%3D%220%22%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20button%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20summary%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20a%3Afocus%3Anot%28%3Afocus%2Dvisible%29%20%7B%0Aoutline%3A%20none%3B%0Abox%2Dshadow%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%5Btabindex%3D%220%22%5D%3Afocus%3Anot%28%3Afocus%2Dvisible%29%2C%0A%2Emarkdown%2Dbody%20details%2Ddialog%3Afocus%3Anot%28%3Afocus%2Dvisible%29%20%7B%0Aoutline%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20g%2Demoji%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Amin%2Dwidth%3A%201ch%3B%0Afont%2Dfamily%3A%20%22Apple%20Color%20Emoji%22%2C%22Segoe%20UI%20Emoji%22%2C%22Segoe%20UI%20Symbol%22%3B%0Afont%2Dsize%3A%201em%3B%0Afont%2Dstyle%3A%20normal%20%21important%3B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dnormal%2C%20400%29%3B%0Aline%2Dheight%3A%201%3B%0Avertical%2Dalign%3A%20%2D0%2E075em%3B%0A%7D%0A%2Emarkdown%2Dbody%20g%2Demoji%20img%20%7B%0Awidth%3A%201em%3B%0Aheight%3A%201em%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%20%7B%0Alist%2Dstyle%2Dtype%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%20label%20%7B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dnormal%2C%20400%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%2Eenabled%20label%20%7B%0Acursor%3A%20pointer%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%2B%2Etask%2Dlist%2Ditem%20%7B%0Amargin%2Dtop%3A%20var%28%2D%2Dbase%2Dsize%2D4%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%20%2Ehandle%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Etask%2Dlist%2Ditem%2Dcheckbox%20%7B%0Amargin%3A%200%20%2E2em%20%2E25em%20%2D1%2E4em%3B%0Avertical%2Dalign%3A%20middle%3B%0A%7D%0A%2Emarkdown%2Dbody%20ul%3Adir%28rtl%29%20%2Etask%2Dlist%2Ditem%2Dcheckbox%20%7B%0Amargin%3A%200%20%2D1%2E6em%20%2E25em%20%2E2em%3B%0A%7D%0A%2Emarkdown%2Dbody%20ol%3Adir%28rtl%29%20%2Etask%2Dlist%2Ditem%2Dcheckbox%20%7B%0Amargin%3A%200%20%2D1%2E6em%20%2E25em%20%2E2em%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Econtains%2Dtask%2Dlist%3Ahover%20%2Etask%2Dlist%2Ditem%2Dconvert%2Dcontainer%2C%0A%2Emarkdown%2Dbody%20%2Econtains%2Dtask%2Dlist%3Afocus%2Dwithin%20%2Etask%2Dlist%2Ditem%2Dconvert%2Dcontainer%20%7B%0Adisplay%3A%20block%3B%0Awidth%3A%20auto%3B%0Aheight%3A%2024px%3B%0Aoverflow%3A%20visible%3B%0Aclip%3A%20auto%3B%0A%7D%0A%2Emarkdown%2Dbody%20%3A%3A%2Dwebkit%2Dcalendar%2Dpicker%2Dindicator%20%7B%0Afilter%3A%20invert%2850%25%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%20%7B%0Apadding%3A%20var%28%2D%2Dbase%2Dsize%2D8%29%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Amargin%2Dbottom%3A%20var%28%2D%2Dbase%2Dsize%2D16%29%3B%0Acolor%3A%20inherit%3B%0Aborder%2Dleft%3A%20%2E25em%20solid%20var%28%2D%2DborderColor%2Ddefault%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%3E%3Afirst%2Dchild%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%3E%3Alast%2Dchild%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Adisplay%3A%20flex%3B%0Afont%2Dweight%3A%20var%28%2D%2Dbase%2Dtext%2Dweight%2Dmedium%2C%20500%29%3B%0Aalign%2Ditems%3A%20center%3B%0Aline%2Dheight%3A%201%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dnote%20%7B%0Aborder%2Dleft%2Dcolor%3A%20var%28%2D%2DborderColor%2Daccent%2Demphasis%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dnote%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Daccent%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dimportant%20%7B%0Aborder%2Dleft%2Dcolor%3A%20var%28%2D%2DborderColor%2Ddone%2Demphasis%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dimportant%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddone%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dwarning%20%7B%0Aborder%2Dleft%2Dcolor%3A%20var%28%2D%2DborderColor%2Dattention%2Demphasis%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dwarning%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Dattention%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dtip%20%7B%0Aborder%2Dleft%2Dcolor%3A%20var%28%2D%2DborderColor%2Dsuccess%2Demphasis%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dtip%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Dsuccess%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dcaution%20%7B%0Aborder%2Dleft%2Dcolor%3A%20var%28%2D%2DborderColor%2Ddanger%2Demphasis%29%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Emarkdown%2Dalert%2Emarkdown%2Dalert%2Dcaution%20%2Emarkdown%2Dalert%2Dtitle%20%7B%0Acolor%3A%20var%28%2D%2DfgColor%2Ddanger%29%3B%0A%7D%0A%2Emarkdown%2Dbody%3E%2A%3Afirst%2Dchild%3E%2Eheading%2Delement%3Afirst%2Dchild%20%7B%0Amargin%2Dtop%3A%200%20%21important%3B%0A%7D%0A%2Emarkdown%2Dbody%20%2Ehighlight%20pre%3Ahas%28%2B%2Ezeroclipboard%2Dcontainer%29%20%7B%0Amin%2Dheight%3A%2052px%3B%0A%7D%0A" rel="stylesheet" />
   <style type="text/css">.markdown-body {
 box-sizing: border-box;
 min-width: 200px;
@@ -907,36 +115,46 @@ color: #e36209;
 background-color: #ffebda;
 }
 </style>
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
 </head>
 <body>
 <article class="markdown-body">
 <h1 id="oldnew-title"><del>Old</del><ins>New</ins> Title</h1>
 <p>
 <del>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEASURBVEiJ7dZNSsRAEIbhRxEcdOHvzp/Bu4jIHEZwJYLgrRR3uhU36g2MS0cdL6CLTGBoE7uT9ELBDwoKUl1vviLdHf7VUXOJdSsY4QA7WMU7ClzhEpM+LzLAKT7w+UNMcILFLpA9PEYAYTxM1yVriOeWkCoK5XijWu7gJIx7LMVA5z0hVZzF3LxlAr3OupoPQCPlp5tDazhsAu1ngnzrtxA82K0pTt3UlCOb1bBKQkfrLZqmaKMJNM4MeqmScHRFTXE4jjZ6qpLQ0UWPpnVq7JdzH41FTofjTKCjmN0B7npCbiVeGdv6nd5bKZBKm7hpCbmermutbDfsr/ln+Hv6AquXyIvRl+dgAAAAAElFTkSuQmCC" title="fig:" alt="image" />
+<figure>
+<img role="img" aria-label="image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEASURBVEiJ7dZNSsRAEIbhRxEcdOHvzp/Bu4jIHEZwJYLgrRR3uhU36g2MS0cdL6CLTGBoE7uT9ELBDwoKUl1vviLdHf7VUXOJdSsY4QA7WMU7ClzhEpM+LzLAKT7w+UNMcILFLpA9PEYAYTxM1yVriOeWkCoK5XijWu7gJIx7LMVA5z0hVZzF3LxlAr3OupoPQCPlp5tDazhsAu1ngnzrtxA82K0pTt3UlCOb1bBKQkfrLZqmaKMJNM4MeqmScHRFTXE4jjZ6qpLQ0UWPpnVq7JdzH41FTofjTKCjmN0B7npCbiVeGdv6nd5bKZBKm7hpCbmermutbDfsr/ln+Hv6AquXyIvRl+dgAAAAAElFTkSuQmCC" alt="image" />
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
 </del>
 </p>
 <p>
 <ins>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEGSURBVEiJ7ZZLagJBEIY/JaDowqjZGR1ylxCChxFcafBeSnbJVtxobpDJMpPEXEAXY4OUTld32wsFfyhoqMc3VUw/4KpAlRzjGkAfeAK6wC3wB6TAKzAD1qd8SBV4Af6BjcXWwAiohEAegA8FIG21y3NWAnx5Qoyl5ONVVQ/oRNoSqGmgiVJkX7a4sdbNbyTQz35XZZHYJ/91Y6gJPBeBHiNBDurdCEfvSLBtU0ufHG1iFrKjlqVoiNpFoCwy6Nss5OjSI8FyHCWLT+rTLGRHUyXRV4X1Yu6jDOV0GEYCDWwQyK+GhVJEszmOV8Y9p53eHReI0R3w7gl52+V5K9oNezZvhsvTFpjWvZBjdHnSAAAAAElFTkSuQmCC" title="fig:" alt="image" />
+<figure>
+<img role="img" aria-label="image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEGSURBVEiJ7ZZLagJBEIY/JaDowqjZGR1ylxCChxFcafBeSnbJVtxobpDJMpPEXEAXY4OUTld32wsFfyhoqMc3VUw/4KpAlRzjGkAfeAK6wC3wB6TAKzAD1qd8SBV4Af6BjcXWwAiohEAegA8FIG21y3NWAnx5Qoyl5ONVVQ/oRNoSqGmgiVJkX7a4sdbNbyTQz35XZZHYJ/91Y6gJPBeBHiNBDurdCEfvSLBtU0ufHG1iFrKjlqVoiNpFoCwy6Nss5OjSI8FyHCWLT+rTLGRHUyXRV4X1Yu6jDOV0GEYCDWwQyK+GhVJEszmOV8Y9p53eHReI0R3w7gl52+V5K9oNezZvhsvTFpjWvZBjdHnSAAAAAElFTkSuQmCC" alt="image" />
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
 </ins>
 </p>
 <ol type="1">
 <li>Lorem ipsum dolor <ins>sit </ins>amet</li>
 <li><ins>
-<a href="https://en.wikipedia.org/wiki/Lorem_ipsum">consectetur adipiscing elit</a>
+<a href="https://en.wikipedia.org/wiki/Lorem_ipsum">consectetur
+adipiscing elit</a>
 </ins></li>
 <li>Lorem<del> ipsum</del> dolor sit amet</li>
 </ol>
-<p>I really love <em>italic <del>fonts</del><ins>font-styles</ins></em> <del>here.</del><ins>there.</ins></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a> print(&quot;Hello&quot;)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="st">-print(&quot;world.&quot;)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="va">+print(&quot;world!&quot;)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a> print(&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt&quot;)</span></code></pre></div>
-<p>Don’t go around saying <del>to people that </del>the world owes you a living. The world owes you nothing. It was here first. <del>One</del><ins>Only one</ins> thing is impossible for God: To find<ins> any</ins> sense in any copyright law on the planet. Truth is stranger than fiction, but it is because Fiction is obliged to stick to possibilities; Truth isn’t.</p>
+<p>I really love <em>italic <del>fonts</del><ins>font-styles</ins></em>
+<del>here.</del><ins>there.</ins></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> print(&quot;Hello&quot;)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">-print(&quot;world.&quot;)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">+print(&quot;world!&quot;)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> print(&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt&quot;)</span></code></pre></div>
+<p>Don’t go around saying <del>to people that </del>the world owes you a
+living. The world owes you nothing. It was here first.
+<del>One</del><ins>Only one</ins> thing is impossible for God: To
+find<ins> any</ins> sense in any copyright law on the planet. Truth is
+stranger than fiction, but it is because Fiction is obliged to stick to
+possibilities; Truth isn’t.</p>
 </article>
 </body>
 </html>
