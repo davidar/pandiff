@@ -423,8 +423,8 @@ namespace pandiff { // eslint-disable-line
     output?: File;
     'pdf-engine'?: string;
     'reference-links'?: boolean;
-    'metadata-file'?: File,
-    'reference-doc'?: File,
+    'metadata-file'?: File;
+    'reference-doc'?: File;
     'resource-path'?: Path;
     standalone?: boolean;
     threshold?: number;
