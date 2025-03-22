@@ -78,7 +78,7 @@ describe('Misc', () => {
   });
   it('quotes', async () => {
     let output = await pandiff('said “foo bar”', 'said “Foo bar”');
-    expect(output).to.equal('said “{~~foo~>Foo~~} bar”\n');
+    expect(output).to.equal('said {~~“foo~>“Foo~~} bar”\n');
     output = await pandiff('', 'said “foo bar”');
     expect(output).to.equal('{++said “foo bar”++}\n');
   });
