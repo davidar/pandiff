@@ -4,7 +4,9 @@
   "description": "Prose diffs for any document format supported by Pandoc",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "bin": "lib/cli.js",
+  "bin": {
+    "pandiff": "lib/cli.js"
+  },
   "engines": {
     "node": ">=8.3.0"
   },
