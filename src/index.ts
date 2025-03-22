@@ -358,16 +358,15 @@ const criticHTML = (text: string) =>
     .replace(regex.critic.sub, '<del>$1</del><ins>$2</ins>');
 
 const criticLaTeX = (text: string) =>
-  '\\useunder{\\uline}{\\ulined}{}\n' +
   text
     .replace(
       regex.critic.del,
       '<span>\\color{Maroon}~~<span>$1</span>~~</span>'
     )
-    .replace(regex.critic.ins, '<span>\\color{OliveGreen}\\ulined{}$1</span>')
+    .replace(regex.critic.ins, '<span>\\color{OliveGreen}$1</span>')
     .replace(
       regex.critic.sub,
-      '<span>\\color{RedOrange}~~<span>$1</span>~~<span>\\ulined{}$2</span></span>'
+      '<span>\\color{RedOrange}~~<span>$1</span>~~<span>$2</span></span>'
     );
 
 const criticTrackChanges = (text: string) =>
