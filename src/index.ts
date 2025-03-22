@@ -4,6 +4,7 @@ import {JSDOM} from 'jsdom';
 import path from 'path';
 import wordwrap from 'wordwrap';
 import * as sh from 'nodejs-sh';
+import fs from 'fs';
 
 interface ArrayLike<T> {
   readonly length: number;
@@ -237,7 +238,15 @@ async function convert(source: string, opts: pandiff.Options = {}) {
   args.push('--html-q-tags', '--mathjax');
   let html;
   if (opts.files) {
-    html = await sh.pandoc(...args, source).toString();
+    if (source === '-') {
+      const stdinContent = fs.readFileSync(0, 'utf8');
+      html = await sh
+        .pandoc(...args)
+        .end(stdinContent)
+        .toString();
+    } else {
+      html = await sh.pandoc(...args, source).toString();
+    }
   } else {
     html = await sh
       .pandoc(...args)
