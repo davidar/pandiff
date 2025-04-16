@@ -40,6 +40,7 @@ const optionDefinitions: commandLineArgs.OptionDefinition[] = [
   {name: 'help', alias: 'h', type: Boolean},
   {name: 'highlight-style', type: String},
   {name: 'lua-filter', type: File, multiple: true},
+  {name: 'template', type: String},
   {name: 'mathjax', type: Boolean},
   {name: 'mathml', type: Boolean},
   {name: 'output', alias: 'o', type: File},

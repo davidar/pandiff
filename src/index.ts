@@ -419,6 +419,7 @@ async function postrender(text: string, opts: pandiff.Options = {}) {
     opts,
     'highlight-style',
     'output',
+    'template',
     'pdf-engine',
     'metadata-file',
     'reference-doc',
@@ -470,6 +471,7 @@ namespace pandiff { // eslint-disable-line
     help?: boolean;
     'highlight-style'?: string;
     'lua-filter'?: File[];
+    template?: string;
     output?: File;
     'pdf-engine'?: string;
     'reference-links'?: boolean;

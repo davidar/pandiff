@@ -73,6 +73,7 @@ Usage: pandiff [OPTIONS] FILE1 FILE2
   -h, --help
       --highlight-style=STRING
       --lua-filter=FILE
+      --template=STRING
       --mathjax=BOOL
       --mathml=BOOL
   -o, --output=FILE
