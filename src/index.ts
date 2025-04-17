@@ -263,11 +263,36 @@ async function convert(source: string, opts: pandiff.Options = {}) {
   return html;
 }
 
+async function extractMetadata(source: string) {
+  const file = fs.readFileSync(source, 'utf8');
+  const lines = file.split('\n');
+  if (lines[0].trim() !== '---') return '';
+
+  const metadata = [lines[0]];
+  for (let i = 1; i < lines.length; i++) {
+    metadata.push(lines[i]);
+    if (lines[i].trim() === '---') break;
+  }
+
+  return metadata.join('\n');
+}
+
 async function pandiff(
   source1: string,
   source2: string,
   opts: pandiff.Options = {}
 ): Promise<string | null> {
+  let metadata = '';
+  switch (opts.metadata) {
+    case 'old':
+      metadata = await extractMetadata(source1);
+      break;
+    case 'new':
+      metadata = await extractMetadata(source2);
+      break;
+    default:
+      break;
+  }
   const html1 = await convert(source1, opts);
   const html2 = await convert(source2, opts);
   const html = htmldiff(html1, html2);
@@ -282,7 +307,7 @@ async function pandiff(
     );
     return null;
   } else {
-    return render(html, opts);
+    return render(html, opts, metadata);
   }
 }
 
@@ -319,7 +344,7 @@ const regex = {
   },
 };
 
-async function render(html: string, opts: pandiff.Options = {}) {
+async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   html = postprocess(html);
   const args = buildArgs(opts, 'reference-links');
   args.push('--wrap=none');
@@ -357,7 +382,7 @@ async function render(html: string, opts: pandiff.Options = {}) {
     }
   }
   const text = lines.join('\n');
-  return postrender(text, opts);
+  return postrender(text, opts, metadata);
 }
 
 const criticHTML = (text: string) =>
@@ -411,7 +436,11 @@ const pandocOptionsHTML = [
   '--standalone',
 ];
 
-async function postrender(text: string, opts: pandiff.Options = {}) {
+async function postrender(
+  text: string,
+  opts: pandiff.Options = {},
+  metadata = ''
+) {
   if (!opts.output && !opts.to) return text;
 
   if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate';
@@ -447,7 +476,7 @@ async function postrender(text: string, opts: pandiff.Options = {}) {
   }
 
   if (opts.output) {
-    await sh.pandoc(...args).end(text);
+    await sh.pandoc(...args).end(`${metadata}\n${text}`);
     return null;
   } else {
     return sh
@@ -484,6 +513,7 @@ namespace pandiff { // eslint-disable-line
     version?: boolean;
     wrap?: 'auto' | 'none' | 'preserve';
     files?: boolean;
+    metadata?: 'new' | 'old' | 'none';
   }
   /* eslint-disable no-inner-declarations */
   export async function trackChanges(

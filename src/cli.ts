@@ -54,6 +54,7 @@ const optionDefinitions: commandLineArgs.OptionDefinition[] = [
   {name: 'version', alias: 'v', type: Boolean},
   {name: 'wrap', type: String},
   {name: 'files', multiple: true, defaultOption: true},
+  {name: 'metadata', type: String},
 ];
 
 function help() {
