@@ -79,13 +79,16 @@ describe('Output formats', () => {
   it('PDF', async function () {
     this.timeout(10000); // Increase timeout for PDF generation
     process.chdir('test');
-    await pandiff('old.md', 'new.md', {
-      files: true,
-      output: 'diff.pdf',
-      'pdf-engine': 'lualatex',
-    });
-    expect(fs.existsSync('diff.pdf')).to.be.true;
-    process.chdir('..');
+    try {
+      await pandiff('old.md', 'new.md', {
+        files: true,
+        output: 'diff.pdf',
+        'pdf-engine': 'lualatex',
+      });
+      expect(fs.existsSync('diff.pdf')).to.be.true;
+    } finally {
+      process.chdir('..');
+    }
   });
 });
 
