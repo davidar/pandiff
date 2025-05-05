@@ -274,7 +274,7 @@ async function extractMetadata(source: string) {
     if (lines[i].trim() === '---') break;
   }
 
-  return metadata.join('\n');
+  return metadata.join('\n') + '\n';
 }
 
 async function pandiff(
@@ -285,9 +285,11 @@ async function pandiff(
   let metadata = '';
   switch (opts.metadata) {
     case 'old':
+      opts.standalone = true;
       metadata = await extractMetadata(source1);
       break;
     case 'new':
+      opts.standalone = true;
       metadata = await extractMetadata(source2);
       break;
     default:
@@ -441,7 +443,7 @@ async function postrender(
   opts: pandiff.Options = {},
   metadata = ''
 ) {
-  if (!opts.output && !opts.to) return text;
+  if (!opts.output && !opts.to) return `${metadata}${text}`;
 
   if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate';
   let args = buildArgs(
@@ -475,19 +477,21 @@ async function postrender(
     if (opts.standalone) args = args.concat(pandocOptionsHTML);
   }
 
+  if (opts.standalone) args = args.concat('-s');
+
   if (opts.output) {
-    await sh.pandoc(...args).end(`${metadata}\n${text}`);
+    await sh.pandoc(...args).end(`${metadata}${text}`);
     return null;
   } else {
     return sh
       .pandoc(...args)
-      .end(text)
+      .end(`${metadata}${text}`)
       .toString();
   }
 }
 
 export = pandiff;
-namespace pandiff { // eslint-disable-line
+  namespace pandiff { // eslint-disable-line
   export type File = string;
   export type Format = string;
   export type Path = string;

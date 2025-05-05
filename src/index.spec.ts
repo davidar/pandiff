@@ -159,3 +159,84 @@ describe('Misc', () => {
     expectWithFallback(output, expected, 'test/diff-table.html');
   });
 });
+
+describe('Metadata', () => {
+  it('keep metadata from old document', async () => {
+    const output = await pandiff(
+      'test/old-metadata.md',
+      'test/new-metadata.md',
+      {
+        files: true,
+        metadata: 'old',
+        to: 'markdown',
+      }
+    );
+    const expected = fs.readFileSync('test/keep-old-metadata-diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep metadata from new document', async () => {
+    const output = await pandiff(
+      'test/old-metadata.md',
+      'test/new-metadata.md',
+      {
+        files: true,
+        metadata: 'new',
+        to: 'markdown',
+      }
+    );
+    const expected = fs.readFileSync('test/keep-new-metadata-diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep metadata from no document', async () => {
+    const output = await pandiff(
+      'test/old-metadata.md',
+      'test/new-metadata.md',
+      {
+        files: true,
+        metadata: 'none',
+        to: 'markdown',
+      }
+    );
+    const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep metadata from old document without metadata', async () => {
+    const output = await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      metadata: 'old',
+      to: 'markdown',
+    });
+    const expected = fs.readFileSync('test/diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep metadata from new document without metadata', async () => {
+    const output = await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      metadata: 'new',
+      to: 'markdown',
+    });
+    const expected = fs.readFileSync('test/diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep metadata none document without metadata', async () => {
+    const output = await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      metadata: 'none',
+      to: 'markdown',
+    });
+    const expected = fs.readFileSync('test/diff.md', 'utf8');
+    expect(output, expected);
+  });
+  it('keep no metadata if metadata is not specified', async () => {
+    const output = await pandiff(
+      'test/old-metadata.md',
+      'test/new-metadata.md',
+      {
+        files: true,
+        to: 'markdown',
+      }
+    );
+    const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
+    expect(output, expected);
+  });
+});
