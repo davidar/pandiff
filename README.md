@@ -134,3 +134,63 @@ Here is some more text.
 
 {--Here is the text to be moved.--}
 ```
+
+### Docker Image
+You can run pandiff inside a docker container locally on your machine by mounting the needed directory as a volume, using the following command.
+
+```sh
+docker run -v ~/documents/my-md-documents:/data davidar/pandiff -o diff.pdf old.md new.md
+```
+
+The docker image also allows you to create diff views inside github actions or a gitlab ci/cd pipeline.
+
+#### GitHub Action
+```yaml
+name: Markdown Diff
+
+on:
+  push:
+    paths:
+      - '**.md'
+  workflow_dispatch:
+
+jobs:
+  compile-markdown-to-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run pandiff
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/work \
+            -w /work \
+            davidar/pandiff \
+            pandiff -o diff.pdf old.md new.md
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diff-pdf
+          path: diff.pdf
+```
+
+
+#### Gitlab CI example
+```yaml
+stages:
+  - diff
+
+compile_markdown_to_pdf:
+  stage: compile
+  image:
+    name: davidar/pandiff
+    entrypoint: ["/bin/sh", "-c"]
+
+  script:
+    - pandiff -o diff.pdf old.md new.md
+  artifacts:
+    paths:
+      - diff.pdf
+```
