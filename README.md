@@ -85,6 +85,7 @@ Usage: pandiff [OPTIONS] FILE1 FILE2
   -t, --to=FORMAT
   -v, --version
       --wrap=STRING
+      --metadata
 ```
 
 ### Git integration
