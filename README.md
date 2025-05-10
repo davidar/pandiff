@@ -144,7 +144,9 @@ docker run -v ~/documents/my-md-documents:/data davidar/pandiff -o diff.pdf old.
 
 The docker image also allows you to create diff views inside github actions or a gitlab ci/cd pipeline.
 
-#### GitHub Action
+<details>
+<summary>GitHub Action</summary>
+
 ```yaml
 name: Markdown Diff
 
@@ -175,9 +177,11 @@ jobs:
           name: diff-pdf
           path: diff.pdf
 ```
+</details>
 
+<details>
+<summary>Gitlab CI example</summary>
 
-#### Gitlab CI example
 ```yaml
 stages:
   - diff
@@ -194,3 +198,4 @@ compile_markdown_to_pdf:
     paths:
       - diff.pdf
 ```
+</details>
