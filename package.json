@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "command-line-args": "^6.0.1",
-    "diff": "^7.0.0",
+    "diff": "^8.0.3",
     "github-markdown-css": "^5.2.0",
     "jsdom": "^26.0.0",
     "node-htmldiff": "^0.9.4",
