@@ -142,7 +142,14 @@ function postprocess(html: string) {
     removeNodes(post.getElementsByTagName('del'));
     if (pre.textContent === post.textContent) return;
     pre.className = 'diff';
-    pre.textContent = diffu(pre.textContent || '', post.textContent || '');
+    // Keep the diff text inside a <code> child: Pandoc's HTML reader only treats
+    // <pre> as a code block when it wraps <code>. Assigning to pre.textContent
+    // replaces every child, dropping the <code> and making the block round-trip
+    // back as a paragraph (fence lost, lines reflowed, smart punctuation applied).
+    const code = pre.ownerDocument.createElement('code');
+    code.textContent = diffu(pre.textContent || '', post.textContent || '');
+    pre.textContent = '';
+    pre.appendChild(code);
   });
 
   // turn diff tags into spans
@@ -235,7 +242,11 @@ async function convert(source: string, opts: pandiff.Options = {}) {
     'mathml',
     'resource-path'
   );
-  args.push('--html-q-tags', '--mathjax');
+  // --no-highlight: with highlighting on, Pandoc emits one <span> per code line and
+  // keeps the newlines as text nodes between them, which node-htmldiff discards — a
+  // changed highlighted block would collapse onto a single line. The final render is
+  // a separate Pandoc call and still highlights normally.
+  args.push('--html-q-tags', '--mathjax', '--no-highlight');
   let html;
   if (opts.files) {
     if (source === '-') {
