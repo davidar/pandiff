@@ -1,16 +1,22 @@
 /* eslint-env mocha */
 import {expect} from 'chai';
+import {spawnSync} from 'child_process';
 import fs from 'fs';
 import pandiff from '.';
 
-// Helper function to write actual output to file when tests fail
+// Helper function to write actual output to file when tests fail.
+// If `normalise` is given, both sides are passed through it before comparing,
+// but the un-normalised output is what gets written to the .actual file.
 function expectWithFallback(
   actual: string | null,
   expected: string,
-  filePath: string
+  filePath: string,
+  normalise: (text: string) => string = text => text
 ) {
   try {
-    expect(actual).to.equal(expected);
+    expect(actual === null ? null : normalise(actual)).to.equal(
+      normalise(expected)
+    );
   } catch (error: unknown) {
     if (actual === null) {
       throw error; // Don't write null to file
@@ -23,6 +29,15 @@ function expectWithFallback(
     );
   }
 }
+
+// Keep only the part of a document from `start` to `end` (inclusive), so that
+// tests of standalone output compare the document body and do not break every
+// time pandoc changes its default templates.
+const between = (start: string, end: string) => (text: string) => {
+  const i = text.indexOf(start);
+  const j = text.lastIndexOf(end);
+  return i < 0 || j < i ? text : text.slice(i, j + end.length);
+};
 
 function test(ext: string) {
   return async function () {
@@ -55,7 +70,14 @@ describe('Output formats', () => {
       to: 'html',
     });
     const expected = fs.readFileSync('test/diff.html', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.html');
+    // pandiff's stylesheet must be embedded in the (otherwise ignored) head
+    expect(text).to.contain('del + ins {');
+    expectWithFallback(
+      text,
+      expected,
+      'test/diff.html',
+      between('<body>', '</body>')
+    );
   });
   it('LaTeX', async () => {
     const text = await pandiff('test/old.md', 'test/new.md', {
@@ -64,7 +86,14 @@ describe('Output formats', () => {
       to: 'latex',
     });
     const expected = fs.readFileSync('test/diff.tex', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.tex');
+    // the colour names used for CriticMarkup need xcolor's dvipsnames
+    expect(text).to.contain('dvipsnames');
+    expectWithFallback(
+      text,
+      expected,
+      'test/diff.tex',
+      between('\\begin{document}', '\\end{document}')
+    );
   });
   it('Word', async () => {
     await pandiff('test/old.md', 'test/new.md', {
@@ -74,7 +103,10 @@ describe('Output formats', () => {
     });
     const text = await pandiff.trackChanges('/tmp/diff.docx');
     const expected = fs.readFileSync('test/diff.docx.md', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.docx.md');
+    // media file names come from docx relationship ids, which pandoc renumbers
+    expectWithFallback(text, expected, 'test/diff.docx.md', t =>
+      t.replace(/media\/rId\d+\./g, 'media/rId.')
+    );
   });
   it('PDF', async function () {
     this.timeout(10000); // Increase timeout for PDF generation
@@ -136,20 +168,61 @@ describe('Misc', () => {
       '<p>\n<ins>\nfoo\n</ins>\n</p>\n<p>\n<ins>\nbar\n</ins>\n</p>\n'
     );
   });
-  /*
-  it('citeproc', async () => {
+  it('citeproc (#24)', async () => {
     const output = await pandiff('@item1', '@item2', {
       bibliography: ['test/biblio.bib'],
     });
-    expect(output).to.equal(
-      'Doe {~~(2005)~>(2006)~~}\n\nDoe, John. {~~2005.~>2006. “Article.”~~} *{~~First Book~>Journal of\nGeneric Studies~~}*{~~. Cambridge: Cambridge University Press.~> 6:\n33–34.~~}\n'
-    );
+    // the exact reference formatting depends on pandoc's default CSL style
+    expect(output).to.match(/^Doe \{~~\(2005\)~>\(2006\)~~\}\n\nDoe, John\. /);
+    expect(output).to.contain('{~~2005.~>2006. “Article.”~~}');
   });
+  /*
   it('captions', async () => {
     const output = await pandiff('![foo](x.png)', '![bar](x.png)');
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n');
   });
   */
+  it('no deprecated pandoc options (#34)', function () {
+    this.timeout(20000);
+    for (const to of ['markdown', 'html', 'latex']) {
+      const result = spawnSync(
+        process.execPath,
+        ['lib/cli.js', 'test/old.md', 'test/new.md', '-t', to],
+        {encoding: 'utf8'}
+      );
+      expect(result.status).to.equal(0);
+      expect(result.stderr).to.not.contain('Deprecated');
+    }
+  });
+  it('markdown flavours keep CriticMarkup and --wrap (#20, #27)', async () => {
+    const stdout = await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      wrap: 'none',
+    });
+    expect(stdout).to.contain('{~~Old~>New~~} Title');
+    expect(stdout).to.contain(
+      'It was here first. {~~One~>Only one~~} thing is impossible'
+    );
+    for (const to of ['markdown', 'gfm', 'commonmark', 'commonmark_x']) {
+      const output = await pandiff('test/old.md', 'test/new.md', {
+        files: true,
+        to,
+        wrap: 'none',
+      });
+      expect(output, to).to.contain('{~~Old~>New~~} Title');
+      expect(output, to).to.contain('{--![image](minus.png)--}');
+      expect(output, to).to.contain(
+        'It was here first. {~~One~>Only one~~} thing is impossible'
+      );
+    }
+    const file = '/tmp/pandiff-wrap-test.md';
+    await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      output: file,
+      wrap: 'none',
+    });
+    expect(fs.readFileSync(file, 'utf8')).to.equal(stdout);
+  });
   it('tables', async () => {
     const output = await pandiff('test/old-table.md', 'test/new-table.md', {
       files: true,
@@ -157,6 +230,26 @@ describe('Misc', () => {
     });
     const expected = fs.readFileSync('test/diff-table.html', 'utf8');
     expectWithFallback(output, expected, 'test/diff-table.html');
+  });
+});
+
+describe('Tables', () => {
+  const row = '| {++shortDOI++} | {++DOI Proxy Server API++} |';
+  it('Markdown output keeps tables as Markdown (#21)', async () => {
+    const output = await pandiff('test/old-table.md', 'test/new-table.md', {
+      files: true,
+    });
+    expect(output).to.not.contain('<table>');
+    expect(output).to.contain(row);
+    expect(output).to.contain('| arXiv {~~identifier~>ID~~} |');
+  });
+  it('Word output keeps tables as tables (#43)', async () => {
+    await pandiff('test/old-table.md', 'test/new-table.md', {
+      files: true,
+      output: '/tmp/diff-table.docx',
+    });
+    const output = await pandiff.trackChanges('/tmp/diff-table.docx');
+    expect(output).to.contain(row);
   });
 });
 
@@ -172,7 +265,7 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-old-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from new document', async () => {
     const output = await pandiff(
@@ -185,7 +278,7 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-new-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from no document', async () => {
     const output = await pandiff(
@@ -198,34 +291,40 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from old document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'old',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from new document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'new',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata none document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'none',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep no metadata if metadata is not specified', async () => {
     const output = await pandiff(
@@ -237,6 +336,6 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
 });

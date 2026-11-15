@@ -142,7 +142,14 @@ function postprocess(html: string) {
     removeNodes(post.getElementsByTagName('del'));
     if (pre.textContent === post.textContent) return;
     pre.className = 'diff';
-    pre.textContent = diffu(pre.textContent || '', post.textContent || '');
+    // Keep the diff text inside a <code> child: Pandoc's HTML reader only treats
+    // <pre> as a code block when it wraps <code>. Assigning to pre.textContent
+    // replaces every child, dropping the <code> and making the block round-trip
+    // back as a paragraph (fence lost, lines reflowed, smart punctuation applied).
+    const code = pre.ownerDocument.createElement('code');
+    code.textContent = diffu(pre.textContent || '', post.textContent || '');
+    pre.textContent = '';
+    pre.appendChild(code);
   });
 
   // turn diff tags into spans
@@ -222,6 +229,43 @@ function buildArgs(opts: Record<string, any>, ...params: string[]) {
   return args;
 }
 
+// Some options were renamed in pandoc 3.8 / 3.11 and the old spellings now
+// print deprecation warnings, so pick the spelling the installed pandoc
+// understands.
+let pandocVersionCache: Promise<number[]> | undefined;
+function pandocVersion() {
+  if (!pandocVersionCache) {
+    pandocVersionCache = sh
+      .pandoc('--version')
+      .toString()
+      .then((out: string) => {
+        const m = out.match(/^pandoc\S* (\d+(?:\.\d+)*)/m);
+        return m ? m[1].split('.').map(Number) : [0];
+      });
+  }
+  return pandocVersionCache;
+}
+
+async function pandocAtLeast(...required: number[]) {
+  const version = await pandocVersion();
+  for (let i = 0; i < required.length; i++) {
+    const v = version[i] || 0;
+    if (v !== required[i]) return v > required[i];
+  }
+  return true;
+}
+
+async function mathjaxArgs() {
+  return (await pandocAtLeast(3, 11))
+    ? ['--math-method=mathjax']
+    : ['--mathjax'];
+}
+
+async function highlightArgs(style: string) {
+  if (await pandocAtLeast(3, 8)) return [`--syntax-highlighting=${style}`];
+  return style === 'none' ? ['--no-highlight'] : [`--highlight-style=${style}`];
+}
+
 async function convert(source: string, opts: pandiff.Options = {}) {
   const args = buildArgs(
     opts,
@@ -231,11 +275,22 @@ async function convert(source: string, opts: pandiff.Options = {}) {
     'filter',
     'from',
     'lua-filter',
-    'mathjax',
-    'mathml',
     'resource-path'
   );
-  args.push('--html-q-tags', '--mathjax');
+  // Math is always read back as MathJax-style \(...\) markup (see
+  // postprocess), so the --mathjax/--mathml options have no effect here.
+  // Highlighting is disabled because, with it on, pandoc emits one <span> per
+  // code line and keeps the newlines as text nodes between them, which
+  // node-htmldiff discards -- a changed highlighted block would collapse onto a
+  // single line. The final render is a separate pandoc call and still
+  // highlights normally.
+  // pandoc >= 2.11 only processes citations when asked to (#24)
+  if (opts.citeproc || opts.bibliography || opts.csl) args.push('--citeproc');
+  args.push(
+    '--html-q-tags',
+    ...(await mathjaxArgs()),
+    ...(await highlightArgs('none'))
+  );
   let html;
   if (opts.files) {
     if (source === '-') {
@@ -274,7 +329,7 @@ async function extractMetadata(source: string) {
     if (lines[i].trim() === '---') break;
   }
 
-  return metadata.join('\n') + '\n';
+  return metadata.join('\n') + '\n\n';
 }
 
 async function pandiff(
@@ -323,11 +378,43 @@ const markdown = [
   '-inline_code_attributes',
   '-link_attributes',
   '-multiline_tables',
-  '-pipe_tables',
   '-raw_attribute',
   '-simple_tables',
   '-smart',
 ].join('');
+
+// Markdown flavours whose writers emit pandoc Spans as raw HTML (given the
+// extension tweaks below), so the diff spans can be turned into CriticMarkup
+// directly in the output.
+const markdownFlavours = new Set([
+  'commonmark',
+  'commonmark_x',
+  'gfm',
+  'markdown',
+  'markdown_github',
+  'markdown_mmd',
+  'markdown_phpextra',
+  'markdown_strict',
+]);
+
+// If the diff is to be written as Markdown, return the pandoc format to write
+// it in; otherwise null. CriticMarkup must not be passed through pandoc again
+// after it has been inserted, as pandoc would escape it (#20, #27).
+function markdownFormat(opts: pandiff.Options): string | null {
+  let format = opts.to;
+  if (!format) {
+    const ext = opts.output ? path.extname(opts.output) : '.md';
+    if (!['.md', '.markdown'].includes(ext)) return null;
+    format = 'markdown';
+  }
+  const base = format.split(/[+-]/)[0];
+  if (!markdownFlavours.has(base)) return null;
+  if (base === 'markdown') return markdown + format.slice(base.length);
+  if (base === 'commonmark_x') {
+    return format + '-bracketed_spans-raw_attribute';
+  }
+  return format;
+}
 
 const regex = {
   critic: {
@@ -351,12 +438,18 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   const args = buildArgs(opts, 'reference-links');
   args.push('--wrap=none');
 
+  // Final Markdown output is written in the requested flavour straight away;
+  // anything else goes via pandoc's Markdown and is converted in postrender.
+  const target = markdownFormat(opts);
+  const format = target || markdown;
   let output = await sh
-    .pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown)
+    .pandoc('-f', 'html+tex_math_single_backslash', '-t', format)
     .end(html)
     .toString();
+  // (pandoc's own Markdown is re-read with its default extensions, as before)
+  const reader = target && !target.startsWith(markdown) ? ['-f', target] : [];
   output = await sh
-    .pandoc(...args, '-t', markdown)
+    .pandoc(...args, ...reader, '-t', format)
     .end(output)
     .toString();
   output = output
@@ -373,6 +466,10 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
     if (line.startsWith('```')) pre = !pre;
     if (pre || line.startsWith('  [')) {
       lines.push(line);
+    } else if (line.startsWith('|')) {
+      // table row: never wrap, and drop the cell padding that older pandoc
+      // computes from the (now replaced) <span> markup
+      lines.push(line.replace(/ {2,}\|/g, ' |'));
     } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
       lines.push(line.slice(0, lastLineLen));
     } else if (opts.wrap !== 'none') {
@@ -443,12 +540,15 @@ async function postrender(
   opts: pandiff.Options = {},
   metadata = ''
 ) {
-  if (!opts.output && !opts.to) return `${metadata}${text}`;
+  if (markdownFormat(opts) !== null) {
+    // already in the requested format, see render()
+    if (!opts.output) return `${metadata}${text}`;
+    fs.writeFileSync(opts.output, `${metadata}${text}`);
+    return null;
+  }
 
-  if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate';
   let args = buildArgs(
     opts,
-    'highlight-style',
     'output',
     'template',
     'pdf-engine',
@@ -457,6 +557,11 @@ async function postrender(
     'resource-path',
     'standalone',
     'to'
+  );
+  args = args.concat(
+    await highlightArgs(
+      opts['syntax-highlighting'] || opts['highlight-style'] || 'kate'
+    )
   );
   const outputExt = opts.output ? path.extname(opts.output) : null;
   if (outputExt === '.pdf') opts.standalone = true;
@@ -497,12 +602,15 @@ export = pandiff;
   export type Path = string;
   export interface Options {
     bibliography?: File[];
+    citeproc?: boolean;
+    csl?: File[];
     columns?: number;
     'extract-media'?: Path;
     filter?: string[];
     from?: Format;
     help?: boolean;
     'highlight-style'?: string;
+    'syntax-highlighting'?: string;
     'lua-filter'?: File[];
     template?: string;
     output?: File;
