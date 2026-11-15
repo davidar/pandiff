@@ -464,8 +464,12 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   for (const line of output.split('\n')) {
     const lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0;
     if (line.startsWith('```')) pre = !pre;
-    if (pre || line.startsWith('  [') || line.startsWith('|')) {
+    if (pre || line.startsWith('  [')) {
       lines.push(line);
+    } else if (line.startsWith('|')) {
+      // table row: never wrap, and drop the cell padding that older pandoc
+      // computes from the (now replaced) <span> markup
+      lines.push(line.replace(/ {2,}\|/g, ' |'));
     } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
       lines.push(line.slice(0, lastLineLen));
     } else if (opts.wrap !== 'none') {
