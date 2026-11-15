@@ -5,6 +5,7 @@ import path from 'path';
 import wordwrap from 'wordwrap';
 import * as sh from 'nodejs-sh';
 import fs from 'fs';
+import {diffDocuments, unchangedFraction, PandocDocument} from './astdiff';
 
 interface ArrayLike<T> {
   readonly length: number;
@@ -266,6 +267,54 @@ async function highlightArgs(style: string) {
   return style === 'none' ? ['--no-highlight'] : [`--highlight-style=${style}`];
 }
 
+function readSource(
+  source: string,
+  args: string[],
+  opts: pandiff.Options
+): Promise<string> {
+  if (opts.files && source !== '-') {
+    return sh.pandoc(...args, source).toString();
+  }
+  const input = opts.files ? fs.readFileSync(0, 'utf8') : source;
+  return sh
+    .pandoc(...args)
+    .end(input)
+    .toString();
+}
+
+// Read a document as a pandoc AST, for the AST-based diff.
+async function convertAST(
+  source: string,
+  opts: pandiff.Options = {}
+): Promise<PandocDocument> {
+  const args = buildArgs(
+    opts,
+    'bibliography',
+    'csl',
+    'extract-media',
+    'filter',
+    'from',
+    'lua-filter',
+    'resource-path'
+  );
+  if (opts.citeproc || opts.bibliography || opts.csl) args.push('--citeproc');
+  args.push('--to=json');
+  let json = await readSource(source, args, opts);
+  if ('extract-media' in opts) {
+    // a second pass names the extracted files after their content, so that
+    // the old and new versions of an image can't overwrite one another
+    json = await sh
+      .pandoc(...buildArgs(opts, 'extract-media'), '--from=json', '--to=json')
+      .end(json)
+      .toString();
+  }
+  return JSON.parse(json);
+}
+
+function algorithm(opts: pandiff.Options) {
+  return opts.algorithm || process.env.PANDIFF_ALGORITHM || 'html';
+}
+
 async function convert(source: string, opts: pandiff.Options = {}) {
   const args = buildArgs(
     opts,
@@ -291,23 +340,7 @@ async function convert(source: string, opts: pandiff.Options = {}) {
     ...(await mathjaxArgs()),
     ...(await highlightArgs('none'))
   );
-  let html;
-  if (opts.files) {
-    if (source === '-') {
-      const stdinContent = fs.readFileSync(0, 'utf8');
-      html = await sh
-        .pandoc(...args)
-        .end(stdinContent)
-        .toString();
-    } else {
-      html = await sh.pandoc(...args, source).toString();
-    }
-  } else {
-    html = await sh
-      .pandoc(...args)
-      .end(source)
-      .toString();
-  }
+  let html = await readSource(source, args, opts);
   html = html.replace(/\\[()[\]]/g, '');
   if ('extract-media' in opts)
     html = await sh
@@ -349,6 +382,20 @@ async function pandiff(
       break;
     default:
       break;
+  }
+  if (algorithm(opts) === 'ast') {
+    const doc = diffDocuments(
+      await convertAST(source1, opts),
+      await convertAST(source2, opts)
+    );
+    const similarity = unchangedFraction(doc);
+    if (opts.threshold && similarity < opts.threshold) {
+      console.error(
+        Math.round(100 - 100 * similarity) + '% of the content has changed'
+      );
+      return null;
+    }
+    return renderFrom(JSON.stringify(doc), 'json', opts, metadata);
   }
   const html1 = await convert(source1, opts);
   const html2 = await convert(source2, opts);
@@ -433,8 +480,23 @@ const regex = {
   },
 };
 
-async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
-  html = postprocess(html);
+function render(html: string, opts: pandiff.Options = {}, metadata = '') {
+  return renderFrom(
+    postprocess(html),
+    'html+tex_math_single_backslash',
+    opts,
+    metadata
+  );
+}
+
+// Write a document whose changes are marked with del/ins/sub spans as
+// CriticMarkup, then convert that to the requested output format.
+async function renderFrom(
+  input: string,
+  inputFormat: string,
+  opts: pandiff.Options = {},
+  metadata = ''
+) {
   const args = buildArgs(opts, 'reference-links');
   args.push('--wrap=none');
 
@@ -443,8 +505,8 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   const target = markdownFormat(opts);
   const format = target || markdown;
   let output = await sh
-    .pandoc('-f', 'html+tex_math_single_backslash', '-t', format)
-    .end(html)
+    .pandoc('-f', inputFormat, '-t', format, '--wrap=none')
+    .end(input)
     .toString();
   // (pandoc's own Markdown is re-read with its default extensions, as before)
   const reader = target && !target.startsWith(markdown) ? ['-f', target] : [];
@@ -601,6 +663,7 @@ export = pandiff;
   export type Format = string;
   export type Path = string;
   export interface Options {
+    algorithm?: 'html' | 'ast';
     bibliography?: File[];
     citeproc?: boolean;
     csl?: File[];

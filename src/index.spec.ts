@@ -339,3 +339,151 @@ describe('Metadata', () => {
     expect(output).to.equal(expected);
   });
 });
+
+describe('AST algorithm (--algorithm=ast)', () => {
+  const ast = (a: string, b: string, opts: pandiff.Options = {}) =>
+    pandiff(a, b, {...opts, algorithm: 'ast'});
+
+  for (const ext of ['docx', 'epub', 'md', 'org', 'rst', 'tex', 'textile']) {
+    it(`reads .${ext}`, async () => {
+      const output = await ast('test/old.' + ext, 'test/new.' + ext, {
+        'extract-media': '/tmp',
+        files: true,
+        'resource-path': 'test',
+      });
+      const diff = fs.readFileSync('test/diff.ast.md', 'utf8');
+      expectWithFallback(output, diff, 'test/diff.ast.md');
+    });
+  }
+
+  it('words', async () => {
+    expect(await ast('foo bar baz', 'foo qux baz')).to.equal(
+      'foo {~~bar~>qux~~} baz\n'
+    );
+    expect(await ast('foo baz', 'foo bar baz')).to.equal('foo {++bar ++}baz\n');
+    expect(await ast('foo bar baz', 'foo baz')).to.equal('foo {--bar --}baz\n');
+    // unchanged spaces between changed words don't split the change
+    expect(await ast('one two three four', 'one deux trois four')).to.equal(
+      'one {~~two three~>deux trois~~} four\n'
+    );
+  });
+  it('formatting', async () => {
+    // a change inside emphasis stays inside it
+    expect(await ast('an *old word* here', 'an *new word* here')).to.equal(
+      'an *{~~old~>new~~} word* here\n'
+    );
+    expect(await ast('*italic fonts*.', '*italic styles*, really.')).to.equal(
+      '*italic {~~fonts~>styles~~}*{~~.~>, really.~~}\n'
+    );
+    // wholly changed emphasis is marked from the outside
+    expect(await ast('a *b* c', 'a *d* c')).to.equal('a {~~*b*~>*d*~~} c\n');
+    // a change of formatting alone is a substitution
+    expect(await ast('a b c', 'a **b** c')).to.equal('a {~~b~>**b**~~} c\n');
+    expect(await ast('[a](http://x) b', '[a](http://y) b')).to.equal(
+      '{~~[a](http://x)~>[a](http://y)~~} b\n'
+    );
+  });
+  it('unrelated paragraphs are replaced, not blended', async () => {
+    expect(
+      await ast('The quick brown fox.', 'Something else entirely.')
+    ).to.equal(
+      '{--The quick brown fox.--}\n\n{++Something else entirely.++}\n'
+    );
+    expect(
+      await ast('same\n\nold one', 'same\n\nnew para\n\nold one')
+    ).to.equal('same\n\n{++new para++}\n\nold one\n');
+  });
+  it('headings', async () => {
+    expect(await ast('# One\n\ntext', '# Two\n\ntext')).to.equal(
+      '# {~~One~>Two~~}\n\ntext\n'
+    );
+    expect(await ast('# Title\n\ntext', '## Title\n\ntext')).to.equal(
+      '# {--Title--}\n\n## {++Title++}\n\ntext\n'
+    );
+  });
+  it('lists', async () => {
+    expect(await ast('- a b\n- c d\n- e f', '- a b\n- e f g')).to.equal(
+      '- a b\n- {--c d--}\n- e f{++ g++}\n'
+    );
+    // a paragraph that becomes a list is not merged with it
+    expect(await ast('one two', '- one two')).to.equal(
+      '{--one two--}\n\n- {++one two++}\n'
+    );
+  });
+  it('restructured list with a footnote (#64)', async () => {
+    const old = '1. X^[footnote]\n    Y\n    1. Z\n';
+    const new_ = '1. X^[footnote]\n    1. Y\n    1. Z\n';
+    expect(await ast(old, new_)).to.equal(
+      '1.  X[^1]{-- Y--}\n    1.  {++Y++}\n    2.  Z\n\n[^1]: footnote\n'
+    );
+    const html = await ast(old, new_, {to: 'html'});
+    expect(html).to.contain('<del> Y</del>');
+    expect(html).to.contain('<ins>\nY\n</ins>');
+    expect(html).to.not.contain('&lt;');
+    expect(html!.match(/<section/g)).to.have.length(1);
+  });
+  it('footnotes', async () => {
+    expect(await ast('a^[one two] b', 'a^[one three] b')).to.equal(
+      'a[^1] b\n\n[^1]: one {~~two~>three~~}\n'
+    );
+  });
+  it('code blocks', async () => {
+    expect(await ast('```\na\nb\n```', '```\na\nc\n```')).to.equal(
+      '``` diff\n a\n-b\n+c\n```\n'
+    );
+    expect(await ast('x', 'x\n\n```\na\n```')).to.equal(
+      'x\n\n``` diff\n+a\n```\n'
+    );
+  });
+  it('math', async () => {
+    expect(await ast('let $2+2=4$', 'let $2+2=5$')).to.equal(
+      'let {~~$2+2=4$~>$2+2=5$~~}\n'
+    );
+  });
+  it('tables', async () => {
+    const output = await ast('test/old-table.md', 'test/new-table.md', {
+      files: true,
+    });
+    expect(output).to.not.contain('<table>');
+    // inserted row
+    expect(output).to.contain(
+      '| {++shortDOI++} | {++DOI Proxy Server API++} |'
+    );
+    // edited cell
+    expect(output).to.contain('| arXiv {~~identifier~>ID~~} |');
+    // deleted row
+    expect(output).to.contain('| {--URL--} |');
+  });
+  it('tables as Word tracked changes', async () => {
+    await ast('test/old-table.md', 'test/new-table.md', {
+      files: true,
+      output: '/tmp/diff-table-ast.docx',
+    });
+    const output = await pandiff.trackChanges('/tmp/diff-table-ast.docx');
+    expect(output).to.contain('| arXiv {~~identifier~>ID~~} |');
+  });
+  it('citeproc', async () => {
+    const output = await ast('@item1', '@item2', {
+      bibliography: ['test/biblio.bib'],
+    });
+    expect(output).to.match(/^Doe \{~~\(2005\)~>\(2006\)~~\}\n\n/);
+    // two different references are not blended into one
+    expect(output).to.match(/\{--Doe, John\. 2005\..*--\}/);
+    expect(output).to.match(/\{\+\+Doe, John\. 2006\..*\+\+\}/);
+  });
+  it('threshold', async () => {
+    const old = 'one two three four';
+    expect(await ast(old, 'one two three 4', {threshold: 0.5})).to.equal(
+      'one two three {~~four~>4~~}\n'
+    );
+    expect(await ast(old, 'one 2 3 4', {threshold: 0.5})).to.equal(null);
+  });
+  it('output formats', async () => {
+    expect(await ast('foo bar', 'foo baz', {to: 'html'})).to.equal(
+      '<p>foo <del>bar</del><ins>baz</ins></p>\n'
+    );
+    expect(await ast('foo bar', 'foo baz', {to: 'gfm'})).to.equal(
+      'foo {~~bar~>baz~~}\n'
+    );
+  });
+});

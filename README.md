@@ -64,6 +64,7 @@ pandiff --help
 
 ```
 Usage: pandiff [OPTIONS] FILE1 FILE2
+      --algorithm=STRING
       --bibliography=FILE
       --csl=FILE
       --columns=NUMBER
@@ -87,6 +88,16 @@ Usage: pandiff [OPTIONS] FILE1 FILE2
       --wrap=STRING
       --metadata
 ```
+
+### Experimental: AST-based diff
+
+`--algorithm=ast` (or `PANDIFF_ALGORITHM=ast` in the environment) compares the
+two documents as pandoc syntax trees instead of as HTML. Blocks are matched up
+first, and only blocks of the same kind that are similar enough are compared
+word by word; anything else is shown as a whole deletion or insertion. This
+keeps the output well formed when the structure of a document changes (for
+example, a paragraph that becomes a list item), and is faster on long
+documents. The default is still the HTML-based diff.
 
 ### Git integration
 

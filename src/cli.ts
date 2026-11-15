@@ -31,6 +31,7 @@ const Format = (s: string) => s;
 const Path = (s: string) => s;
 
 const optionDefinitions: commandLineArgs.OptionDefinition[] = [
+  {name: 'algorithm', type: String},
   {name: 'bibliography', type: File, multiple: true},
   {name: 'citeproc', alias: 'C', type: Boolean},
   {name: 'columns', type: Number},
