@@ -245,7 +245,7 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-old-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from new document', async () => {
     const output = await pandiff(
@@ -258,7 +258,7 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-new-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from no document', async () => {
     const output = await pandiff(
@@ -271,34 +271,40 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from old document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'old',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata from new document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'new',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep metadata none document without metadata', async () => {
     const output = await pandiff('test/old.md', 'test/new.md', {
+      'extract-media': '/tmp',
       files: true,
+      'resource-path': 'test',
       metadata: 'none',
       to: 'markdown',
     });
     const expected = fs.readFileSync('test/diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
   it('keep no metadata if metadata is not specified', async () => {
     const output = await pandiff(
@@ -310,6 +316,6 @@ describe('Metadata', () => {
       }
     );
     const expected = fs.readFileSync('test/keep-no-metadata-diff.md', 'utf8');
-    expect(output, expected);
+    expect(output).to.equal(expected);
   });
 });
