@@ -376,7 +376,6 @@ const markdown = [
   '-inline_code_attributes',
   '-link_attributes',
   '-multiline_tables',
-  '-pipe_tables',
   '-raw_attribute',
   '-simple_tables',
   '-smart',
@@ -463,7 +462,7 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   for (const line of output.split('\n')) {
     const lastLineLen = lines.length > 0 ? lines[lines.length - 1].length : 0;
     if (line.startsWith('```')) pre = !pre;
-    if (pre || line.startsWith('  [')) {
+    if (pre || line.startsWith('  [') || line.startsWith('|')) {
       lines.push(line);
     } else if (line.match(/^[=-]+$/) && lastLineLen > 0) {
       lines.push(line.slice(0, lastLineLen));

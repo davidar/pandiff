@@ -233,6 +233,26 @@ describe('Misc', () => {
   });
 });
 
+describe('Tables', () => {
+  const row = '| {++shortDOI++} | {++DOI Proxy Server API++} |';
+  it('Markdown output keeps tables as Markdown (#21)', async () => {
+    const output = await pandiff('test/old-table.md', 'test/new-table.md', {
+      files: true,
+    });
+    expect(output).to.not.contain('<table>');
+    expect(output).to.contain(row);
+    expect(output).to.contain('| arXiv {~~identifier~>ID~~} |');
+  });
+  it('Word output keeps tables as tables (#43)', async () => {
+    await pandiff('test/old-table.md', 'test/new-table.md', {
+      files: true,
+      output: '/tmp/diff-table.docx',
+    });
+    const output = await pandiff.trackChanges('/tmp/diff-table.docx');
+    expect(output).to.contain(row);
+  });
+});
+
 describe('Metadata', () => {
   it('keep metadata from old document', async () => {
     const output = await pandiff(
