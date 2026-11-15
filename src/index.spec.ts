@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import {expect} from 'chai';
+import {spawnSync} from 'child_process';
 import fs from 'fs';
 import pandiff from '.';
 
@@ -181,6 +182,18 @@ describe('Misc', () => {
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n');
   });
   */
+  it('no deprecated pandoc options (#34)', function () {
+    this.timeout(20000);
+    for (const to of ['markdown', 'html', 'latex']) {
+      const result = spawnSync(
+        process.execPath,
+        ['lib/cli.js', 'test/old.md', 'test/new.md', '-t', to],
+        {encoding: 'utf8'}
+      );
+      expect(result.status).to.equal(0);
+      expect(result.stderr).to.not.contain('Deprecated');
+    }
+  });
   it('tables', async () => {
     const output = await pandiff('test/old-table.md', 'test/new-table.md', {
       files: true,

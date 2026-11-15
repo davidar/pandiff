@@ -229,6 +229,43 @@ function buildArgs(opts: Record<string, any>, ...params: string[]) {
   return args;
 }
 
+// Some options were renamed in pandoc 3.8 / 3.11 and the old spellings now
+// print deprecation warnings, so pick the spelling the installed pandoc
+// understands.
+let pandocVersionCache: Promise<number[]> | undefined;
+function pandocVersion() {
+  if (!pandocVersionCache) {
+    pandocVersionCache = sh
+      .pandoc('--version')
+      .toString()
+      .then((out: string) => {
+        const m = out.match(/^pandoc\S* (\d+(?:\.\d+)*)/m);
+        return m ? m[1].split('.').map(Number) : [0];
+      });
+  }
+  return pandocVersionCache;
+}
+
+async function pandocAtLeast(...required: number[]) {
+  const version = await pandocVersion();
+  for (let i = 0; i < required.length; i++) {
+    const v = version[i] || 0;
+    if (v !== required[i]) return v > required[i];
+  }
+  return true;
+}
+
+async function mathjaxArgs() {
+  return (await pandocAtLeast(3, 11))
+    ? ['--math-method=mathjax']
+    : ['--mathjax'];
+}
+
+async function highlightArgs(style: string) {
+  if (await pandocAtLeast(3, 8)) return [`--syntax-highlighting=${style}`];
+  return style === 'none' ? ['--no-highlight'] : [`--highlight-style=${style}`];
+}
+
 async function convert(source: string, opts: pandiff.Options = {}) {
   const args = buildArgs(
     opts,
@@ -238,15 +275,20 @@ async function convert(source: string, opts: pandiff.Options = {}) {
     'filter',
     'from',
     'lua-filter',
-    'mathjax',
-    'mathml',
     'resource-path'
   );
-  // --no-highlight: with highlighting on, Pandoc emits one <span> per code line and
-  // keeps the newlines as text nodes between them, which node-htmldiff discards — a
-  // changed highlighted block would collapse onto a single line. The final render is
-  // a separate Pandoc call and still highlights normally.
-  args.push('--html-q-tags', '--mathjax', '--no-highlight');
+  // Math is always read back as MathJax-style \(...\) markup (see
+  // postprocess), so the --mathjax/--mathml options have no effect here.
+  // Highlighting is disabled because, with it on, pandoc emits one <span> per
+  // code line and keeps the newlines as text nodes between them, which
+  // node-htmldiff discards -- a changed highlighted block would collapse onto a
+  // single line. The final render is a separate pandoc call and still
+  // highlights normally.
+  args.push(
+    '--html-q-tags',
+    ...(await mathjaxArgs()),
+    ...(await highlightArgs('none'))
+  );
   let html;
   if (opts.files) {
     if (source === '-') {
@@ -456,10 +498,8 @@ async function postrender(
 ) {
   if (!opts.output && !opts.to) return `${metadata}${text}`;
 
-  if (!('highlight-style' in opts)) opts['highlight-style'] = 'kate';
   let args = buildArgs(
     opts,
-    'highlight-style',
     'output',
     'template',
     'pdf-engine',
@@ -468,6 +508,11 @@ async function postrender(
     'resource-path',
     'standalone',
     'to'
+  );
+  args = args.concat(
+    await highlightArgs(
+      opts['syntax-highlighting'] || opts['highlight-style'] || 'kate'
+    )
   );
   const outputExt = opts.output ? path.extname(opts.output) : null;
   if (outputExt === '.pdf') opts.standalone = true;
@@ -514,6 +559,7 @@ export = pandiff;
     from?: Format;
     help?: boolean;
     'highlight-style'?: string;
+    'syntax-highlighting'?: string;
     'lua-filter'?: File[];
     template?: string;
     output?: File;
