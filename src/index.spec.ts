@@ -194,6 +194,35 @@ describe('Misc', () => {
       expect(result.stderr).to.not.contain('Deprecated');
     }
   });
+  it('markdown flavours keep CriticMarkup and --wrap (#20, #27)', async () => {
+    const stdout = await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      wrap: 'none',
+    });
+    expect(stdout).to.contain('{~~Old~>New~~} Title');
+    expect(stdout).to.contain(
+      'It was here first. {~~One~>Only one~~} thing is impossible'
+    );
+    for (const to of ['markdown', 'gfm', 'commonmark', 'commonmark_x']) {
+      const output = await pandiff('test/old.md', 'test/new.md', {
+        files: true,
+        to,
+        wrap: 'none',
+      });
+      expect(output, to).to.contain('{~~Old~>New~~} Title');
+      expect(output, to).to.contain('{--![image](minus.png)--}');
+      expect(output, to).to.contain(
+        'It was here first. {~~One~>Only one~~} thing is impossible'
+      );
+    }
+    const file = '/tmp/pandiff-wrap-test.md';
+    await pandiff('test/old.md', 'test/new.md', {
+      files: true,
+      output: file,
+      wrap: 'none',
+    });
+    expect(fs.readFileSync(file, 'utf8')).to.equal(stdout);
+  });
   it('tables', async () => {
     const output = await pandiff('test/old-table.md', 'test/new-table.md', {
       files: true,

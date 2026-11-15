@@ -327,7 +327,7 @@ async function extractMetadata(source: string) {
     if (lines[i].trim() === '---') break;
   }
 
-  return metadata.join('\n') + '\n';
+  return metadata.join('\n') + '\n\n';
 }
 
 async function pandiff(
@@ -382,6 +382,39 @@ const markdown = [
   '-smart',
 ].join('');
 
+// Markdown flavours whose writers emit pandoc Spans as raw HTML (given the
+// extension tweaks below), so the diff spans can be turned into CriticMarkup
+// directly in the output.
+const markdownFlavours = new Set([
+  'commonmark',
+  'commonmark_x',
+  'gfm',
+  'markdown',
+  'markdown_github',
+  'markdown_mmd',
+  'markdown_phpextra',
+  'markdown_strict',
+]);
+
+// If the diff is to be written as Markdown, return the pandoc format to write
+// it in; otherwise null. CriticMarkup must not be passed through pandoc again
+// after it has been inserted, as pandoc would escape it (#20, #27).
+function markdownFormat(opts: pandiff.Options): string | null {
+  let format = opts.to;
+  if (!format) {
+    const ext = opts.output ? path.extname(opts.output) : '.md';
+    if (!['.md', '.markdown'].includes(ext)) return null;
+    format = 'markdown';
+  }
+  const base = format.split(/[+-]/)[0];
+  if (!markdownFlavours.has(base)) return null;
+  if (base === 'markdown') return markdown + format.slice(base.length);
+  if (base === 'commonmark_x') {
+    return format + '-bracketed_spans-raw_attribute';
+  }
+  return format;
+}
+
 const regex = {
   critic: {
     del: /\{--([\s\S]*?)--\}/g,
@@ -404,12 +437,18 @@ async function render(html: string, opts: pandiff.Options = {}, metadata = '') {
   const args = buildArgs(opts, 'reference-links');
   args.push('--wrap=none');
 
+  // Final Markdown output is written in the requested flavour straight away;
+  // anything else goes via pandoc's Markdown and is converted in postrender.
+  const target = markdownFormat(opts);
+  const format = target || markdown;
   let output = await sh
-    .pandoc('-f', 'html+tex_math_single_backslash', '-t', markdown)
+    .pandoc('-f', 'html+tex_math_single_backslash', '-t', format)
     .end(html)
     .toString();
+  // (pandoc's own Markdown is re-read with its default extensions, as before)
+  const reader = target && !target.startsWith(markdown) ? ['-f', target] : [];
   output = await sh
-    .pandoc(...args, '-t', markdown)
+    .pandoc(...args, ...reader, '-t', format)
     .end(output)
     .toString();
   output = output
@@ -496,7 +535,12 @@ async function postrender(
   opts: pandiff.Options = {},
   metadata = ''
 ) {
-  if (!opts.output && !opts.to) return `${metadata}${text}`;
+  if (markdownFormat(opts) !== null) {
+    // already in the requested format, see render()
+    if (!opts.output) return `${metadata}${text}`;
+    fs.writeFileSync(opts.output, `${metadata}${text}`);
+    return null;
+  }
 
   let args = buildArgs(
     opts,
