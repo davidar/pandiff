@@ -3,14 +3,19 @@ import {expect} from 'chai';
 import fs from 'fs';
 import pandiff from '.';
 
-// Helper function to write actual output to file when tests fail
+// Helper function to write actual output to file when tests fail.
+// If `normalise` is given, both sides are passed through it before comparing,
+// but the un-normalised output is what gets written to the .actual file.
 function expectWithFallback(
   actual: string | null,
   expected: string,
-  filePath: string
+  filePath: string,
+  normalise: (text: string) => string = text => text
 ) {
   try {
-    expect(actual).to.equal(expected);
+    expect(actual === null ? null : normalise(actual)).to.equal(
+      normalise(expected)
+    );
   } catch (error: unknown) {
     if (actual === null) {
       throw error; // Don't write null to file
@@ -23,6 +28,15 @@ function expectWithFallback(
     );
   }
 }
+
+// Keep only the part of a document from `start` to `end` (inclusive), so that
+// tests of standalone output compare the document body and do not break every
+// time pandoc changes its default templates.
+const between = (start: string, end: string) => (text: string) => {
+  const i = text.indexOf(start);
+  const j = text.lastIndexOf(end);
+  return i < 0 || j < i ? text : text.slice(i, j + end.length);
+};
 
 function test(ext: string) {
   return async function () {
@@ -55,7 +69,14 @@ describe('Output formats', () => {
       to: 'html',
     });
     const expected = fs.readFileSync('test/diff.html', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.html');
+    // pandiff's stylesheet must be embedded in the (otherwise ignored) head
+    expect(text).to.contain('del + ins {');
+    expectWithFallback(
+      text,
+      expected,
+      'test/diff.html',
+      between('<body>', '</body>')
+    );
   });
   it('LaTeX', async () => {
     const text = await pandiff('test/old.md', 'test/new.md', {
@@ -64,7 +85,14 @@ describe('Output formats', () => {
       to: 'latex',
     });
     const expected = fs.readFileSync('test/diff.tex', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.tex');
+    // the colour names used for CriticMarkup need xcolor's dvipsnames
+    expect(text).to.contain('dvipsnames');
+    expectWithFallback(
+      text,
+      expected,
+      'test/diff.tex',
+      between('\\begin{document}', '\\end{document}')
+    );
   });
   it('Word', async () => {
     await pandiff('test/old.md', 'test/new.md', {
@@ -74,7 +102,10 @@ describe('Output formats', () => {
     });
     const text = await pandiff.trackChanges('/tmp/diff.docx');
     const expected = fs.readFileSync('test/diff.docx.md', 'utf8');
-    expectWithFallback(text, expected, 'test/diff.docx.md');
+    // media file names come from docx relationship ids, which pandoc renumbers
+    expectWithFallback(text, expected, 'test/diff.docx.md', t =>
+      t.replace(/media\/rId\d+\./g, 'media/rId.')
+    );
   });
   it('PDF', async function () {
     this.timeout(10000); // Increase timeout for PDF generation

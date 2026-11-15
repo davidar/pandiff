@@ -1,8 +1,8 @@
 # {~~Old~>New~~} Title
 
-{--![image](media/rId20.png)--}
+{--![image](media/rId9.png)--}
 
-{++![image](media/rId23.png)++}
+{++![image](media/rId12.png)++}
 
 1.  Lorem ipsum dolor {++sit++} amet
 2.  {++[consectetur adipiscing

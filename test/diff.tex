@@ -104,6 +104,10 @@
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
 \hypersetup{
   colorlinks=true,
   linkcolor={Maroon},
@@ -120,9 +124,9 @@
 \section{\texorpdfstring{{\color{RedOrange}\st{{Old}}{New}}
 Title}{OldNew Title}}\label{oldnew-title}
 
-{\color{Maroon}\st{{\pandocbounded{\includegraphics[keepaspectratio]{minus.png}}}}}
+{\color{Maroon}\st{{\pandocbounded{\includegraphics[keepaspectratio,alt={image}]{minus.png}}}}}
 
-{\color{OliveGreen}\pandocbounded{\includegraphics[keepaspectratio]{plus.png}}}
+{\color{OliveGreen}\pandocbounded{\includegraphics[keepaspectratio,alt={image}]{plus.png}}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
