@@ -168,15 +168,15 @@ describe('Misc', () => {
       '<p>\n<ins>\nfoo\n</ins>\n</p>\n<p>\n<ins>\nbar\n</ins>\n</p>\n'
     );
   });
-  /*
-  it('citeproc', async () => {
+  it('citeproc (#24)', async () => {
     const output = await pandiff('@item1', '@item2', {
       bibliography: ['test/biblio.bib'],
     });
-    expect(output).to.equal(
-      'Doe {~~(2005)~>(2006)~~}\n\nDoe, John. {~~2005.~>2006. “Article.”~~} *{~~First Book~>Journal of\nGeneric Studies~~}*{~~. Cambridge: Cambridge University Press.~> 6:\n33–34.~~}\n'
-    );
+    // the exact reference formatting depends on pandoc's default CSL style
+    expect(output).to.match(/^Doe \{~~\(2005\)~>\(2006\)~~\}\n\nDoe, John\. /);
+    expect(output).to.contain('{~~2005.~>2006. “Article.”~~}');
   });
+  /*
   it('captions', async () => {
     const output = await pandiff('![foo](x.png)', '![bar](x.png)');
     expect(output).to.equal('![{~~foo~>bar~~}](x.png)\n');

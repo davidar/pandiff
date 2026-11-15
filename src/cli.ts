@@ -32,6 +32,7 @@ const Path = (s: string) => s;
 
 const optionDefinitions: commandLineArgs.OptionDefinition[] = [
   {name: 'bibliography', type: File, multiple: true},
+  {name: 'citeproc', alias: 'C', type: Boolean},
   {name: 'columns', type: Number},
   {name: 'csl', type: File, multiple: true},
   {name: 'extract-media', type: Path},

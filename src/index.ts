@@ -284,6 +284,8 @@ async function convert(source: string, opts: pandiff.Options = {}) {
   // node-htmldiff discards -- a changed highlighted block would collapse onto a
   // single line. The final render is a separate pandoc call and still
   // highlights normally.
+  // pandoc >= 2.11 only processes citations when asked to (#24)
+  if (opts.citeproc || opts.bibliography || opts.csl) args.push('--citeproc');
   args.push(
     '--html-q-tags',
     ...(await mathjaxArgs()),
@@ -596,6 +598,8 @@ export = pandiff;
   export type Path = string;
   export interface Options {
     bibliography?: File[];
+    citeproc?: boolean;
+    csl?: File[];
     columns?: number;
     'extract-media'?: Path;
     filter?: string[];
