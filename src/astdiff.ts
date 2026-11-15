@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Diff two pandoc JSON ASTs directly, instead of diffing HTML
-// (--algorithm=ast).
+// Diff two pandoc JSON ASTs directly (the default, --algorithm=ast).
 //
 // The search space is restricted to what the output can express: a block is
 // either unchanged, deleted, inserted, or paired with a similar block of the

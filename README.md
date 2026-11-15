@@ -38,7 +38,7 @@ pandiff test/old.md test/new.md
 1.  Lorem ipsum dolor {++sit ++}amet
 2.  {++[consectetur adipiscing
 elit](https://en.wikipedia.org/wiki/Lorem_ipsum)++}
-3.  Lorem{-- ipsum--} dolor sit amet
+3.  Lorem {--ipsum --}dolor sit amet
 
 I really love *italic {~~fonts~>font-styles~~}* {~~here.~>there.~~}
 
@@ -51,7 +51,7 @@ I really love *italic {~~fonts~>font-styles~~}* {~~here.~>there.~~}
 
 Don’t go around saying {--to people that --}the world owes you a
 living. The world owes you nothing. It was here first. {~~One~>Only
-one~~} thing is impossible for God: To find{++ any++} sense in any
+one~~} thing is impossible for God: To find {++any ++}sense in any
 copyright law on the planet. Truth is stranger than fiction, but it is
 because Fiction is obliged to stick to possibilities; Truth isn’t.
 ````
@@ -89,15 +89,17 @@ Usage: pandiff [OPTIONS] FILE1 FILE2
       --metadata
 ```
 
-### Experimental: AST-based diff
+### Diff algorithm
 
-`--algorithm=ast` (or `PANDIFF_ALGORITHM=ast` in the environment) compares the
-two documents as pandoc syntax trees instead of as HTML. Blocks are matched up
+The two documents are compared as pandoc syntax trees. Blocks are matched up
 first, and only blocks of the same kind that are similar enough are compared
 word by word; anything else is shown as a whole deletion or insertion. This
 keeps the output well formed when the structure of a document changes (for
-example, a paragraph that becomes a list item), and is faster on long
-documents. The default is still the HTML-based diff.
+example, a paragraph that becomes a list item).
+
+Until version 0.8 the documents were compared as HTML instead. That behaviour
+is still available with `--algorithm=html` (or `PANDIFF_ALGORITHM=html` in the
+environment).
 
 ### Git integration
 

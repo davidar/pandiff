@@ -312,7 +312,7 @@ async function convertAST(
 }
 
 function algorithm(opts: pandiff.Options) {
-  return opts.algorithm || process.env.PANDIFF_ALGORITHM || 'html';
+  return opts.algorithm || process.env.PANDIFF_ALGORITHM || 'ast';
 }
 
 async function convert(source: string, opts: pandiff.Options = {}) {
