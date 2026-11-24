@@ -15,7 +15,7 @@
 
 ## Installation
 
-First install [Pandoc](https://pandoc.org/installing.html) and [npm](https://www.npmjs.com/get-npm), then run:
+First install [Pandoc](https://pandoc.org/installing.html) (version 2.19 or later) and [npm](https://www.npmjs.com/get-npm), then run:
 
 ```sh
 npm install -g pandiff
